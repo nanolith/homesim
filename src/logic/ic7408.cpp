@@ -31,9 +31,9 @@ homesim::ic7408::ic7408(
     wire* in1a, wire* in1b, wire* out1y, wire* in2a, wire* in2b, wire* out2y,
     wire* out3y, wire* in3a, wire* in3b, wire* out4y, wire* in4a, wire* in4b,
     double delay)
-    : g1(in1a, in1b, out1y)
-    , g2(in2a, in2b, out2y)
-    , g3(in3a, in3b, out3y)
-    , g4(in4a, in4b, out4y)
+    : g1(in1a, in1b, out1y, delay)
+    , g2(in2a, in2b, out2y, delay)
+    , g3(in3a, in3b, out3y, delay)
+    , g4(in4a, in4b, out4y, delay)
 {
 }

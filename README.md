@@ -17,7 +17,7 @@ This project is primarily to support teaching the 8-bit computing class at Tampa
 Hackerspace, but I am releasing it under an MIT license in case it is useful to
 others (see [license][LICENSE.txt]).
 
-[license]: LICENSE.txt
+[license]: https://github.com/nanolith/homesim/blob/master/LICENSE.txt
 
 Building
 -------- 

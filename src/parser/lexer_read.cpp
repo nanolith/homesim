@@ -103,6 +103,11 @@ token homesim::lexer::read()
             return
                 matchKeywordOrIdentifier("alse", HOMESIM_TOKEN_KEYWORD_FALSE);
 
+        case 'm':
+            start(ch);
+            return
+                matchKeywordOrIdentifier("odule", HOMESIM_TOKEN_KEYWORD_MODULE);
+
         case 'p':
             start(ch);
             return maybeReadKeywordPinProbePulldownPullupOrIdentifier();

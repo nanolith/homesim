@@ -1135,6 +1135,97 @@ TEST(identifier_falses)
 }
 
 /**
+ * module keyword.
+ */
+TEST(keyword_module)
+{
+    stringstream in("module");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_KEYWORD_MODULE == scanner.read());
+    TEST_EXPECT(string("module") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
+ * m identifier.
+ */
+TEST(identifier_m)
+{
+    stringstream in("m");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("m") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
+ * mo identifier.
+ */
+TEST(identifier_mo)
+{
+    stringstream in("mo");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("mo") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
+ * mod identifier.
+ */
+TEST(identifier_mod)
+{
+    stringstream in("mod");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("mod") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
+ * modu identifier.
+ */
+TEST(identifier_modu)
+{
+    stringstream in("modu");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("modu") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
+ * modul identifier.
+ */
+TEST(identifier_modul)
+{
+    stringstream in("modul");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("modul") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
+ * modules identifier.
+ */
+TEST(identifier_modules)
+{
+    stringstream in("modules");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("modules") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
  * pin keyword.
  */
 TEST(keyword_pin)

@@ -60,6 +60,8 @@ enum token
     HOMESIM_TOKEN_KEYWORD_EXPECT,
     /* false keyword. */
     HOMESIM_TOKEN_KEYWORD_FALSE,
+    /* module keyword. */
+    HOMESIM_TOKEN_KEYWORD_MODULE,
     /* pin keyword. */
     HOMESIM_TOKEN_KEYWORD_PIN,
     /* probe keyword. */

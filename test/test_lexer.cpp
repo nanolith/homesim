@@ -1057,6 +1057,149 @@ TEST(identifier_expects)
 }
 
 /**
+ * export keyword.
+ */
+TEST(keyword_export)
+{
+    stringstream in("export");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_KEYWORD_EXPORT == scanner.read());
+    TEST_EXPECT(string("export") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
+ * expo identifier.
+ */
+TEST(identifier_expo)
+{
+    stringstream in("expo");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("expo") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
+ * expor identifier.
+ */
+TEST(identifier_expor)
+{
+    stringstream in("expor");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("expor") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
+ * exports identifier.
+ */
+TEST(identifier_exports)
+{
+    stringstream in("exports");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("exports") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
+ * external keyword.
+ */
+TEST(keyword_external)
+{
+    stringstream in("external");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_KEYWORD_EXTERNAL == scanner.read());
+    TEST_EXPECT(string("external") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
+ * ext identifier.
+ */
+TEST(identifier_ext)
+{
+    stringstream in("ext");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("ext") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
+ * exte identifier.
+ */
+TEST(identifier_exte)
+{
+    stringstream in("exte");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("exte") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
+ * exter identifier.
+ */
+TEST(identifier_exter)
+{
+    stringstream in("exter");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("exter") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
+ * extern identifier.
+ */
+TEST(identifier_extern)
+{
+    stringstream in("extern");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("extern") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
+ * externa identifier.
+ */
+TEST(identifier_externa)
+{
+    stringstream in("externa");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("externa") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
+ * externals identifier.
+ */
+TEST(identifier_externals)
+{
+    stringstream in("externals");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("externals") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
  * false keyword.
  */
 TEST(keyword_false)
@@ -1677,6 +1820,85 @@ TEST(keyword_signals)
 
     TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
     TEST_EXPECT(string("signals") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
+ * source keyword.
+ */
+TEST(keyword_source)
+{
+    stringstream in("source");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_KEYWORD_SOURCE == scanner.read());
+    TEST_EXPECT(string("source") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
+ * so identifier.
+ */
+TEST(identifier_so)
+{
+    stringstream in("so");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("so") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
+ * sou identifier.
+ */
+TEST(identifier_sou)
+{
+    stringstream in("sou");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("sou") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
+ * sour identifier.
+ */
+TEST(identifier_sour)
+{
+    stringstream in("sour");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("sour") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+
+/**
+ * sourc identifier.
+ */
+TEST(identifier_sourc)
+{
+    stringstream in("sourc");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("sourc") == scanner.get_token_string());
+    TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
+}
+
+/**
+ * sources identifier.
+ */
+TEST(identifier_sources)
+{
+    stringstream in("sources");
+    lexer scanner(in);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("sources") == scanner.get_token_string());
     TEST_EXPECT(HOMESIM_TOKEN_EOF == scanner.read());
 }
 

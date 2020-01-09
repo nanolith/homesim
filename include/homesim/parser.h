@@ -61,6 +61,10 @@ enum token
     HOMESIM_TOKEN_KEYWORD_EXECUTION,
     /* expect keyword. */
     HOMESIM_TOKEN_KEYWORD_EXPECT,
+    /* export keyword. */
+    HOMESIM_TOKEN_KEYWORD_EXPORT,
+    /* external keyword. */
+    HOMESIM_TOKEN_KEYWORD_EXTERNAL,
     /* false keyword. */
     HOMESIM_TOKEN_KEYWORD_FALSE,
     /* module keyword. */
@@ -77,6 +81,8 @@ enum token
     HOMESIM_TOKEN_KEYWORD_SCENARIO,
     /* signal keyword. */
     HOMESIM_TOKEN_KEYWORD_SIGNAL,
+    /* source keyword. */
+    HOMESIM_TOKEN_KEYWORD_SOURCE,
     /* start keyword. */
     HOMESIM_TOKEN_KEYWORD_START,
     /* state keyword. */
@@ -194,7 +200,8 @@ private:
     token maybeReadExponentNumberWithSign();
     token maybeReadExponentNumber();
     token maybeReadKeywordAfterAssertAtOrIdentifier();
-    token maybeReadKeywordExamineExecutionExpectOrIdentifier();
+    token maybeReadKeywordExamineExecutionExpectExportExternalOrIdentifier();
+    token maybeReadKeywordExpectExportOrIdentifier();
     token maybeReadKeywordPinProbePulldownPullupOrIdentifier();
     token maybeReadKeywordPulldownPullupOrIdentifier();
     token maybeReadKeywordPullupOrIdentifier();

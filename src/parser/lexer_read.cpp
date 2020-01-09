@@ -96,7 +96,8 @@ token homesim::lexer::read()
 
         case 'e':
             start(ch);
-            return maybeReadKeywordExamineExecutionExpectOrIdentifier();
+            return
+                maybeReadKeywordExamineExecutionExpectExportExternalOrIdentifier();
 
         case 'f':
             start(ch);
@@ -496,7 +497,8 @@ token homesim::lexer::maybeReadKeywordAfterAssertAtOrIdentifier()
     return HOMESIM_TOKEN_INVALID;
 }
 
-token homesim::lexer::maybeReadKeywordExamineExecutionExpectOrIdentifier()
+token
+homesim::lexer::maybeReadKeywordExamineExecutionExpectExportExternalOrIdentifier()
 {
     int ch = in.get();
 
@@ -524,8 +526,13 @@ token homesim::lexer::maybeReadKeywordExamineExecutionExpectOrIdentifier()
 
         case 'p':
             accept(ch);
+            return maybeReadKeywordExpectExportOrIdentifier();
+
+        case 't':
+            accept(ch);
             return
-                matchKeywordOrIdentifier("ect", HOMESIM_TOKEN_KEYWORD_EXPECT);
+                matchKeywordOrIdentifier(
+                    "ernal", HOMESIM_TOKEN_KEYWORD_EXTERNAL);
 
         case EOF:
             return HOMESIM_TOKEN_IDENTIFIER;
@@ -536,6 +543,32 @@ token homesim::lexer::maybeReadKeywordExamineExecutionExpectOrIdentifier()
     }
 
     return HOMESIM_TOKEN_INVALID;
+}
+
+token homesim::lexer::maybeReadKeywordExpectExportOrIdentifier()
+{
+    int ch = in.get();
+
+    switch (ch)
+    {
+        case 'e':
+            accept(ch);
+            return
+                matchKeywordOrIdentifier("ct", HOMESIM_TOKEN_KEYWORD_EXPECT);
+
+        case 'o':
+            accept(ch);
+            return
+                matchKeywordOrIdentifier(
+                    "rt", HOMESIM_TOKEN_KEYWORD_EXPORT);
+
+        case EOF:
+            return HOMESIM_TOKEN_IDENTIFIER;
+
+        default:
+            in.putback(ch);
+            return maybeReadIdentifier();
+    }
 }
 
 token homesim::lexer::maybeReadKeywordPinProbePulldownPullupOrIdentifier()
@@ -627,6 +660,11 @@ token homesim::lexer::maybeReadKeywordScenarioSignalStartStateOrIdentifier()
             accept(ch);
             return
                 matchKeywordOrIdentifier("gnal", HOMESIM_TOKEN_KEYWORD_SIGNAL);
+
+        case 'o':
+            accept(ch);
+            return
+                matchKeywordOrIdentifier("urce", HOMESIM_TOKEN_KEYWORD_SOURCE);
 
         case 't':
             accept(ch);

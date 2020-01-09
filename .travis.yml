@@ -1,0 +1,39 @@
+language: cpp
+
+addons:
+    apt:
+        sources:
+            ubuntu-toolchain-r-test
+        packages:
+            - gcc-8
+            - g++-8
+
+before_install:
+    - sudo apt-get install -y git make
+
+before_script:
+    - pushd /tmp
+    - mkdir -p /tmp/apps/homesim/bin
+    - export PATH=/tmp/apps/homesim/bin:$PATH
+    - export LD_LIBRARY_PATH=/tmp/apps/homesim/lib:$LD_LIBRARY_PATH
+    - cd /tmp
+    - wget https://cmake.org/files/v3.10/cmake-3.10.3-Linux-x86_64.sh
+    - sh cmake-3.10.3-Linux-x86_64.sh --skip-license --prefix=/tmp/apps/homesim
+    - cd /tmp
+    - git clone https://github.com/nanolith/minunit minunit
+    - cd minunit && git checkout v0.2.1
+    - mkdir build && cd build
+    - CC=gcc-8 CXX=g++-8 cmake -DCMAKE_INSTALL_PREFIX=/tmp/apps/homesim ..
+    - make && make install
+    - popd
+
+jobs:
+    include:
+
+        - &build-and-test
+            stage: Build and test
+            install:
+            script:
+                - mkdir build && cd build
+                - CC=gcc-8 CXX=g++-8 cmake -DCMAKE_INSTALL_PREFIX=/tmp/apps/homesim -DCMAKE_PREFIX_PATH=/tmp/apps/homesim ..
+                - make && make install

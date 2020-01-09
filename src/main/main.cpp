@@ -5,6 +5,7 @@
  *
  * \copyright Copyright 2020 Justin Handville. All rights reserved.
  */
+#include <homesim/parser.h>
 #include <iostream>
 
 using namespace homesim;

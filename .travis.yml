@@ -37,7 +37,7 @@ before_script:
     - git clone https://github.com/nanolith/minunit minunit
     - cd minunit && git checkout v0.2.1
     - mkdir build && cd build
-    - CC=gcc-8 CXX=g++-8 cmake -DCMAKE_INSTALL_PREFIX=/tmp/apps/homesim ..
+    - CC=gcc-8 CXX=g++-8 cmake -DCMAKE_INSTALL_PREFIX=/tmp/apps/homesim -DCMAKE_PREFIX_PATH=/tmp/apps/homesim ..
     - make && make install
     - popd
 

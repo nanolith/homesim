@@ -459,7 +459,7 @@ TEST(keyword_after)
 }
 
 /**
- * a is an indentifier.
+ * a is an identifier.
  */
 TEST(identifier_a)
 {
@@ -472,7 +472,7 @@ TEST(identifier_a)
 }
 
 /**
- * a is an indentifier.
+ * a is an identifier.
  */
 TEST(identifier_a_space)
 {
@@ -485,7 +485,7 @@ TEST(identifier_a_space)
 }
 
 /**
- * am is an indentifier.
+ * am is an identifier.
  */
 TEST(identifier_am)
 {
@@ -498,7 +498,7 @@ TEST(identifier_am)
 }
 
 /**
- * af is an indentifier.
+ * af is an identifier.
  */
 TEST(identifier_af)
 {
@@ -511,7 +511,7 @@ TEST(identifier_af)
 }
 
 /**
- * aft is an indentifier.
+ * aft is an identifier.
  */
 TEST(identifier_aft)
 {
@@ -524,7 +524,7 @@ TEST(identifier_aft)
 }
 
 /**
- * afte is an indentifier.
+ * afte is an identifier.
  */
 TEST(identifier_afte)
 {

@@ -15,8 +15,11 @@
 #endif
 
 #include <functional>
+#include <initializer_list>
 #include <iosfwd>
 #include <list>
+#include <map>
+#include <memory>
 #include <string>
 
 namespace homesim {
@@ -99,6 +102,18 @@ enum token
     /* an invalid token. */
     HOMESIM_TOKEN_INVALID
 };
+
+typedef std::pair<token, std::string>
+token_pair;
+
+/**
+ * Simple utility function to transform a lexer token into a string description.
+ *
+ * \param t         The token to convert to a string.
+ *
+ * \returns a string description of the token.
+ */
+std::string token_to_description(token t);
 
 /**
  * \brief The lexer tokenizes an input stream.  These tokens can then be passed
@@ -189,6 +204,198 @@ private:
     token maybeReadIdentifier();
     token maybeReadStartIdentifier();
     token maybeReadString();
+};
+
+struct config_ast_module;
+struct config_ast_component;
+struct config_ast_connection;
+struct config_ast_wire;
+struct config_ast_probe;
+struct config_ast_scenario;
+struct config_ast_expression;
+struct config_ast_execution;
+struct config_ast_step;
+struct config_ast_assertion;
+
+struct config_ast_module
+{
+    std::string name;
+    std::map<std::string, std::shared_ptr<config_ast_component>> component_map;
+    std::map<std::string, std::shared_ptr<config_ast_wire>> wire_map;
+    std::map<std::string, std::shared_ptr<config_ast_probe>> probe_map;
+    std::map<std::string, std::shared_ptr<config_ast_scenario>> scenario_map;
+};
+
+struct config_ast_component
+{
+    std::string name;
+    std::shared_ptr<std::string> type;
+    std::map<std::string, std::shared_ptr<config_ast_expression>> config_map;
+};
+
+struct config_ast_wire
+{
+    std::string name;
+    std::list<std::shared_ptr<config_ast_connection>> connection_list;
+    std::shared_ptr<config_ast_component> pullup_pulldown;
+};
+
+struct config_ast_connection
+{
+    std::string component;
+    std::string pin;
+};
+
+struct config_ast_scenario
+{
+    std::string name;
+    std::map<std::string, std::shared_ptr<config_ast_execution>> execution_map;
+};
+
+struct config_ast_execution
+{
+    std::string name;
+    std::list<std::shared_ptr<config_ast_step>> step_list;
+};
+
+struct config_ast_expression
+{
+    virtual ~config_ast_expression() { }
+    virtual token type() = 0;
+    virtual std::string eval() = 0;
+};
+
+struct config_ast_simple_expression : public config_ast_expression
+{
+    virtual token type() { return ty; }
+    virtual std::string eval() { return simple_value; }
+
+    std::string simple_value;
+    token ty;
+};
+
+struct config_ast_complex_expression : public config_ast_expression
+{
+    virtual token type();
+    virtual std::string eval();
+
+    std::string functor;
+    std::list<token_pair> args;
+};
+
+struct config_ast_assignment
+{
+    std::string lhs_major;
+    std::string lhs_minor;
+    std::shared_ptr<config_ast_expression> rhs;
+};
+
+struct config_ast_probe
+{
+    std::string name;
+    std::string type;
+    std::shared_ptr<std::string> sub_type;
+    std::list<std::string> wire_ref_list;
+};
+
+struct config_ast_step
+{
+    std::string type;
+    std::shared_ptr<config_ast_expression> step_expression;
+    std::list<std::shared_ptr<config_ast_assignment>> pin_assignments;
+    std::list<std::shared_ptr<config_ast_assertion>> assertion_list;
+};
+
+struct config_ast_assertion
+{
+    std::string type;
+    std::list<std::string> lhs;
+    std::shared_ptr<config_ast_expression> rhs;
+};
+
+/**
+ * \brief The parser parses an input stream into expressions that can be
+ * evaluated.
+ */
+class parser
+{
+public:
+
+    typedef
+    std::list<std::string>
+    error_list;
+
+    template <
+        typename result_type>
+    using parse_result =
+    std::pair<
+        std::shared_ptr<error_list>,
+        std::shared_ptr<result_type>>;
+
+    /**
+     * \brief Create a parser instance backed by the given input stream.
+     *
+     * \param input         The input stream for this instance.
+     */
+    parser(std::istream& input);
+
+    /**
+     * \brief Parse the input stream producing a config ast.
+     *
+     * \returns a pair that contains a shared pointer to the config_ast_module
+     * and a shared pointer to a list of error strings.  On success, the config
+     * module will be populated and the error list pointer will not. On failure,
+     * vice versa.
+     */
+    parse_result<config_ast_module> parse();
+
+private:
+    lexer in;
+    std::list<token_pair> lookahead;
+
+    token_pair read();
+    void put_back(const token_pair&);
+    parse_result<config_ast_component> parse_component();
+    parse_result<config_ast_component> parse_pull(const std::string& type);
+    parse_result<config_ast_wire> parse_wire();
+    parse_result<config_ast_probe> parse_probe(const std::string& type);
+    parse_result<config_ast_assignment> parse_assign(const std::string& id);
+    parse_result<config_ast_assignment> parse_pin_assign(const std::string& id);
+    parse_result<config_ast_connection> parse_connection(const std::string& id);
+    parse_result<config_ast_scenario> parse_scenario();
+    parse_result<config_ast_execution> parse_execution();
+    parse_result<config_ast_step> parse_step(const std::string& type);
+    parse_result<config_ast_assertion> parse_assertion(const std::string& type);
+    std::shared_ptr<std::function<void(const token_pair&)>>
+    simple_assignment_maker(
+        std::shared_ptr<config_ast_assignment>);
+    void handle_assignment(
+        std::shared_ptr<config_ast_component> component,
+        std::shared_ptr<config_ast_assignment> assignment);
+    parse_result<std::string> parse_type();
+    parse_result<std::string> parse_wire_ref();
+    parse_result<config_ast_expression>
+    parse_complex_expression(const std::string&);
+    parse_result<config_ast_expression>
+    parse_inner_expression(const std::string&);
+
+    std::shared_ptr<error_list>
+    parse_sequence(
+        std::initializer_list<
+            std::pair<
+                token,
+                std::shared_ptr<std::function<void (const token_pair&)>>>>
+            seq);
+
+    std::shared_ptr<error_list>
+    parse_choose(
+        std::initializer_list<
+            std::pair<
+                token,
+                std::shared_ptr<std::function<void (const token_pair&)>>>>
+            choices);
+
+    std::string trim_string(const std::string& str);
 };
 
 } /* namespace homesim */

@@ -86,7 +86,8 @@ private:
     {
         inline bool operator ()(time_action lhs, time_action rhs)
         {
-            lhs.first > rhs.first;
+            return
+                lhs.first > rhs.first;
         }
     };
 

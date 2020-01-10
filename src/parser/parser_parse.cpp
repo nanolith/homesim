@@ -82,6 +82,16 @@ parser::parse_result<config_ast_module> homesim::parser::parse()
                                 maybeComponent.second->name,
                                 maybeComponent.second));
                 OPTIONL_END(),
+                OPTIONL_BEGIN(HOMESIM_TOKEN_KEYWORD_EXPORT,t)
+                    auto maybeWire = parse_export_wire();
+                    if (!!maybeWire.first)
+                        errors = maybeWire.first;
+                    else
+                        module->wire_map.insert(
+                            make_pair(
+                                maybeWire.second->name,
+                                maybeWire.second));
+                OPTIONL_END(),
                 OPTIONL_BEGIN(HOMESIM_TOKEN_KEYWORD_WIRE,t)
                     auto maybeWire = parse_wire();
                     if (!!maybeWire.first)
@@ -194,6 +204,36 @@ parser::parse_result<config_ast_component> homesim::parser::parse_component()
     return return_type(nullptr, component);
 }
 
+parser::parse_result<config_ast_wire> homesim::parser::parse_export_wire()
+{
+    typedef parse_result<config_ast_wire> return_type;
+
+    shared_ptr<config_ast_wire> wire;
+    shared_ptr<error_list> innerErrors;
+
+    auto errors =
+        SEQUENCE_BEGIN()
+            SEQL_BEGIN(HOMESIM_TOKEN_KEYWORD_WIRE, t)
+                auto maybeWire = parse_wire();
+                if (!!maybeWire.first)
+                {
+                    innerErrors = maybeWire.first;
+                }
+                else
+                {
+                    wire = maybeWire.second;
+                    wire->exported = true;
+                }
+            SEQL_END(),
+        SEQUENCE_END()
+    if (!!errors)
+    {
+        return return_type(errors, nullptr);
+    }
+
+    return return_type(nullptr, wire);
+}
+
 parser::parse_result<config_ast_wire> homesim::parser::parse_wire()
 {
     typedef parse_result<config_ast_wire> return_type;
@@ -244,6 +284,13 @@ parser::parse_result<config_ast_wire> homesim::parser::parse_wire()
                         errors = maybePulldown.first;
                     else
                         wire->pullup_pulldown = maybePulldown.second;
+                OPTIONL_END(),
+                OPTIONL_BEGIN(HOMESIM_TOKEN_KEYWORD_SIGNAL, t)
+                    auto maybeSignalSourceExternal = parse_wire_signal_source();
+                    if (!!maybeSignalSourceExternal.first)
+                        errors = maybeSignalSourceExternal.first;
+                    else
+                        wire->external_source = true;
                 OPTIONL_END()
             CHOOSE_END()
         if (!!newErrors && !errors)
@@ -258,6 +305,28 @@ parser::parse_result<config_ast_wire> homesim::parser::parse_wire()
     }
 
     return return_type(nullptr, wire);
+}
+
+parser::parse_result<bool> homesim::parser::parse_wire_signal_source()
+{
+    typedef parse_result<bool> return_type;
+
+    shared_ptr<bool> external;
+    shared_ptr<error_list> innerErrors;
+
+    auto errors =
+        SEQUENCE_BEGIN()
+            SEQ(HOMESIM_TOKEN_KEYWORD_SOURCE),
+            SEQL_BEGIN(HOMESIM_TOKEN_KEYWORD_EXTERNAL, t)
+                external = make_shared<bool>(true);
+            SEQL_END(),
+        SEQUENCE_END()
+    if (!!errors)
+    {
+        return return_type(errors, nullptr);
+    }
+
+    return return_type(nullptr, external);
 }
 
 parser::parse_result<config_ast_probe>

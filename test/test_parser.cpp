@@ -125,6 +125,71 @@ TEST(simple_wire)
     TEST_EXPECT(string("bar") == barwire->name);
     TEST_EXPECT(0 == barwire->connection_list.size());
     TEST_EXPECT(!barwire->pullup_pulldown);
+    TEST_EXPECT(false == barwire->exported);
+    TEST_EXPECT(false == barwire->external_source);
+}
+
+/**
+ * A simple wire can be exported.
+ */
+TEST(export_wire)
+{
+    stringstream in("module foo { export wire bar { } }");
+    parser p(in);
+
+    auto res = p.parse();
+
+    TEST_ASSERT(!res.first);
+    TEST_ASSERT(!!res.second);
+    TEST_EXPECT(string("foo") == res.second->name);
+    TEST_EXPECT(0 == res.second->component_map.size());
+    TEST_EXPECT(1 == res.second->wire_map.size());
+    TEST_EXPECT(0 == res.second->probe_map.size());
+    TEST_EXPECT(0 == res.second->scenario_map.size());
+
+    /* examine components. */
+    auto barwire = res.second->wire_map["bar"];
+    TEST_ASSERT(!!barwire);
+    TEST_EXPECT(string("bar") == barwire->name);
+    TEST_EXPECT(0 == barwire->connection_list.size());
+    TEST_EXPECT(!barwire->pullup_pulldown);
+    TEST_EXPECT(true == barwire->exported);
+    TEST_EXPECT(false == barwire->external_source);
+}
+
+/**
+ * A wire can have an external signal source.
+ */
+TEST(wire_with_external_signal_source)
+{
+    stringstream in(
+        R"TEST(
+            module foo {
+                export wire bar {
+                    signal source external
+                }
+            }
+        )TEST");
+    parser p(in);
+
+    auto res = p.parse();
+
+    TEST_ASSERT(!res.first);
+    TEST_ASSERT(!!res.second);
+    TEST_EXPECT(string("foo") == res.second->name);
+    TEST_EXPECT(0 == res.second->component_map.size());
+    TEST_EXPECT(1 == res.second->wire_map.size());
+    TEST_EXPECT(0 == res.second->probe_map.size());
+    TEST_EXPECT(0 == res.second->scenario_map.size());
+
+    /* examine components. */
+    auto barwire = res.second->wire_map["bar"];
+    TEST_ASSERT(!!barwire);
+    TEST_EXPECT(string("bar") == barwire->name);
+    TEST_EXPECT(0 == barwire->connection_list.size());
+    TEST_EXPECT(!barwire->pullup_pulldown);
+    TEST_EXPECT(true == barwire->exported);
+    TEST_EXPECT(true == barwire->external_source);
 }
 
 /**

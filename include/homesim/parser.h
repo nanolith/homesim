@@ -243,6 +243,8 @@ struct config_ast_component
 struct config_ast_wire
 {
     std::string name;
+    bool exported;
+    bool external_source;
     std::list<std::shared_ptr<config_ast_connection>> connection_list;
     std::shared_ptr<config_ast_component> pullup_pulldown;
 };
@@ -365,6 +367,8 @@ private:
     parse_result<config_ast_component> parse_component();
     parse_result<config_ast_component> parse_pull(const std::string& type);
     parse_result<config_ast_wire> parse_wire();
+    parse_result<bool> parse_wire_signal_source();
+    parse_result<config_ast_wire> parse_export_wire();
     parse_result<config_ast_probe> parse_probe(const std::string& type);
     parse_result<config_ast_assignment> parse_assign(const std::string& id);
     parse_result<config_ast_assignment> parse_pin_assign(const std::string& id);

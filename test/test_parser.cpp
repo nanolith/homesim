@@ -16,18 +16,22 @@ using namespace std;
 TEST_SUITE(parser);
 
 /**
- * EOF returns an error string.
+ * EOF throws an exception.
  */
 TEST(eof)
 {
     stringstream in("");
     parser p(in);
 
-    auto res = p.parse();
+    try {
+        auto res = p.parse();
 
-    TEST_ASSERT(!!res.first);
-    TEST_ASSERT(!res.second);
-    TEST_EXPECT(res.first->size() > 0);
+        /* we expected an exception to be thrown, and it wasn't. */
+        TEST_FAILURE();
+    }
+    catch (parser_error& e)
+    {
+    }
 }
 
 /**
@@ -40,13 +44,11 @@ TEST(empty_module)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 }
 
 /**
@@ -59,16 +61,14 @@ TEST(simple_component)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(1 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(1 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barcomp = res.second->component_map["bar"];
+    auto barcomp = res->component_map["bar"];
     TEST_ASSERT(!!barcomp);
     TEST_EXPECT(string("bar") == barcomp->name);
     TEST_EXPECT(0 == barcomp->config_map.size());
@@ -84,16 +84,14 @@ TEST(simple_component_with_type)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(1 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(1 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barcomp = res.second->component_map["bar"];
+    auto barcomp = res->component_map["bar"];
     TEST_ASSERT(!!barcomp);
     TEST_EXPECT(string("bar") == barcomp->name);
     TEST_ASSERT(!!barcomp->type);
@@ -111,16 +109,14 @@ TEST(simple_wire)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(1 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(1 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barwire = res.second->wire_map["bar"];
+    auto barwire = res->wire_map["bar"];
     TEST_ASSERT(!!barwire);
     TEST_EXPECT(string("bar") == barwire->name);
     TEST_EXPECT(0 == barwire->connection_list.size());
@@ -139,16 +135,14 @@ TEST(export_wire)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(1 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(1 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barwire = res.second->wire_map["bar"];
+    auto barwire = res->wire_map["bar"];
     TEST_ASSERT(!!barwire);
     TEST_EXPECT(string("bar") == barwire->name);
     TEST_EXPECT(0 == barwire->connection_list.size());
@@ -174,16 +168,14 @@ TEST(wire_with_external_signal_source)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(1 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(1 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barwire = res.second->wire_map["bar"];
+    auto barwire = res->wire_map["bar"];
     TEST_ASSERT(!!barwire);
     TEST_EXPECT(string("bar") == barwire->name);
     TEST_EXPECT(0 == barwire->connection_list.size());
@@ -209,16 +201,14 @@ TEST(component_with_config_assignment_simple_expression)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(1 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(1 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barcomp = res.second->component_map["bar"];
+    auto barcomp = res->component_map["bar"];
     TEST_ASSERT(!!barcomp);
     TEST_EXPECT(string("bar") == barcomp->name);
     TEST_ASSERT(1 == barcomp->config_map.size());
@@ -245,16 +235,14 @@ TEST(component_with_config_assignment_ns_expression)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(1 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(1 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barcomp = res.second->component_map["bar"];
+    auto barcomp = res->component_map["bar"];
     TEST_ASSERT(!!barcomp);
     TEST_EXPECT(string("bar") == barcomp->name);
     TEST_ASSERT(1 == barcomp->config_map.size());
@@ -281,16 +269,14 @@ TEST(component_with_config_assignment_us_expression)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(1 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(1 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barcomp = res.second->component_map["bar"];
+    auto barcomp = res->component_map["bar"];
     TEST_ASSERT(!!barcomp);
     TEST_EXPECT(string("bar") == barcomp->name);
     TEST_ASSERT(1 == barcomp->config_map.size());
@@ -317,16 +303,14 @@ TEST(component_with_config_assignment_ms_expression)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(1 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(1 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barcomp = res.second->component_map["bar"];
+    auto barcomp = res->component_map["bar"];
     TEST_ASSERT(!!barcomp);
     TEST_EXPECT(string("bar") == barcomp->name);
     TEST_ASSERT(1 == barcomp->config_map.size());
@@ -353,16 +337,14 @@ TEST(component_with_config_assignment_kohms_expression)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(1 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(1 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barcomp = res.second->component_map["bar"];
+    auto barcomp = res->component_map["bar"];
     TEST_ASSERT(!!barcomp);
     TEST_EXPECT(string("bar") == barcomp->name);
     TEST_ASSERT(1 == barcomp->config_map.size());
@@ -389,16 +371,14 @@ TEST(wire_with_pin_assignment)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(1 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(1 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barwire = res.second->wire_map["bus0"];
+    auto barwire = res->wire_map["bus0"];
     TEST_ASSERT(!!barwire);
     TEST_EXPECT(string("bus0") == barwire->name);
     TEST_ASSERT(1 == barwire->connection_list.size());
@@ -427,16 +407,14 @@ TEST(wire_with_pullup)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(1 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(1 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barwire = res.second->wire_map["bus0"];
+    auto barwire = res->wire_map["bus0"];
     TEST_ASSERT(!!barwire);
     TEST_EXPECT(string("bus0") == barwire->name);
     TEST_ASSERT(0 == barwire->connection_list.size());
@@ -465,16 +443,14 @@ TEST(wire_with_pullup_with_config)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(1 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(1 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barwire = res.second->wire_map["bus0"];
+    auto barwire = res->wire_map["bus0"];
     TEST_ASSERT(!!barwire);
     TEST_EXPECT(string("bus0") == barwire->name);
     TEST_ASSERT(0 == barwire->connection_list.size());
@@ -506,16 +482,14 @@ TEST(wire_with_pulldown)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(1 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(1 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barwire = res.second->wire_map["bus0"];
+    auto barwire = res->wire_map["bus0"];
     TEST_ASSERT(!!barwire);
     TEST_EXPECT(string("bus0") == barwire->name);
     TEST_ASSERT(0 == barwire->connection_list.size());
@@ -544,16 +518,14 @@ TEST(wire_with_pulldown_with_config)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(1 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(1 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barwire = res.second->wire_map["bus0"];
+    auto barwire = res->wire_map["bus0"];
     TEST_ASSERT(!!barwire);
     TEST_EXPECT(string("bus0") == barwire->name);
     TEST_ASSERT(0 == barwire->connection_list.size());
@@ -583,16 +555,14 @@ TEST(signal_probe)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(1 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(1 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine probes. */
-    auto barprobe = res.second->probe_map["bar"];
+    auto barprobe = res->probe_map["bar"];
     TEST_ASSERT(!!barprobe);
     TEST_EXPECT(string("bar") == barprobe->name);
     TEST_EXPECT(string("signal") == barprobe->type);
@@ -617,16 +587,14 @@ TEST(signal_probe_with_id_wire)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(1 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(1 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine probes. */
-    auto barprobe = res.second->probe_map["bar"];
+    auto barprobe = res->probe_map["bar"];
     TEST_ASSERT(!!barprobe);
     TEST_EXPECT(string("bar") == barprobe->name);
     TEST_EXPECT(string("signal") == barprobe->type);
@@ -653,16 +621,14 @@ TEST(signal_probe_with_wildcard_wire)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(1 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(1 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine probes. */
-    auto barprobe = res.second->probe_map["bar"];
+    auto barprobe = res->probe_map["bar"];
     TEST_ASSERT(!!barprobe);
     TEST_EXPECT(string("bar") == barprobe->name);
     TEST_EXPECT(string("signal") == barprobe->type);
@@ -689,16 +655,14 @@ TEST(signal_probe_with_type)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(1 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(1 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine probes. */
-    auto barprobe = res.second->probe_map["bar"];
+    auto barprobe = res->probe_map["bar"];
     TEST_ASSERT(!!barprobe);
     TEST_EXPECT(string("bar") == barprobe->name);
     TEST_EXPECT(string("signal") == barprobe->type);
@@ -723,16 +687,14 @@ TEST(state_probe)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(1 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(1 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine probes. */
-    auto barprobe = res.second->probe_map["bar"];
+    auto barprobe = res->probe_map["bar"];
     TEST_ASSERT(!!barprobe);
     TEST_EXPECT(string("bar") == barprobe->name);
     TEST_EXPECT(string("state") == barprobe->type);
@@ -757,16 +719,14 @@ TEST(state_probe_with_id_wire)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(1 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(1 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine probes. */
-    auto barprobe = res.second->probe_map["bar"];
+    auto barprobe = res->probe_map["bar"];
     TEST_ASSERT(!!barprobe);
     TEST_EXPECT(string("bar") == barprobe->name);
     TEST_EXPECT(string("state") == barprobe->type);
@@ -793,16 +753,14 @@ TEST(state_probe_with_wildcard_wire)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(1 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(1 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine probes. */
-    auto barprobe = res.second->probe_map["bar"];
+    auto barprobe = res->probe_map["bar"];
     TEST_ASSERT(!!barprobe);
     TEST_EXPECT(string("bar") == barprobe->name);
     TEST_EXPECT(string("state") == barprobe->type);
@@ -829,16 +787,14 @@ TEST(state_probe_with_type)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(1 == res.second->probe_map.size());
-    TEST_EXPECT(0 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(1 == res->probe_map.size());
+    TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine probes. */
-    auto barprobe = res.second->probe_map["bar"];
+    auto barprobe = res->probe_map["bar"];
     TEST_ASSERT(!!barprobe);
     TEST_EXPECT(string("bar") == barprobe->name);
     TEST_EXPECT(string("state") == barprobe->type);
@@ -863,16 +819,14 @@ TEST(simple_scenario)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(1 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(1 == res->scenario_map.size());
 
     /* examine scenarios. */
-    auto scenariox = res.second->scenario_map["x"];
+    auto scenariox = res->scenario_map["x"];
     TEST_ASSERT(!!scenariox);
     TEST_EXPECT(string("x") == scenariox->name);
     TEST_EXPECT(0 == scenariox->execution_map.size());
@@ -896,16 +850,14 @@ TEST(simple_scenario_with_execution_and_id)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(1 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(1 == res->scenario_map.size());
 
     /* examine scenarios. */
-    auto scenariox = res.second->scenario_map["x"];
+    auto scenariox = res->scenario_map["x"];
     TEST_ASSERT(!!scenariox);
     TEST_EXPECT(string("x") == scenariox->name);
     TEST_EXPECT(1 == scenariox->execution_map.size());
@@ -933,16 +885,14 @@ TEST(simple_scenario_with_execution_and_number)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(1 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(1 == res->scenario_map.size());
 
     /* examine scenarios. */
-    auto scenariox = res.second->scenario_map["x"];
+    auto scenariox = res->scenario_map["x"];
     TEST_ASSERT(!!scenariox);
     TEST_EXPECT(string("x") == scenariox->name);
     TEST_EXPECT(1 == scenariox->execution_map.size());
@@ -972,16 +922,14 @@ TEST(execution_with_step_at_start)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(1 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(1 == res->scenario_map.size());
 
     /* examine scenarios. */
-    auto scenariox = res.second->scenario_map["x"];
+    auto scenariox = res->scenario_map["x"];
     TEST_ASSERT(!!scenariox);
     TEST_EXPECT(string("x") == scenariox->name);
     TEST_EXPECT(1 == scenariox->execution_map.size());
@@ -1018,16 +966,14 @@ TEST(step_at_start_with_pin_assignment)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(1 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(1 == res->scenario_map.size());
 
     /* examine scenarios. */
-    auto scenariox = res.second->scenario_map["x"];
+    auto scenariox = res->scenario_map["x"];
     TEST_ASSERT(!!scenariox);
     TEST_EXPECT(string("x") == scenariox->name);
     TEST_EXPECT(1 == scenariox->execution_map.size());
@@ -1071,16 +1017,14 @@ TEST(execution_with_step_after_ns_27)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(1 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(1 == res->scenario_map.size());
 
     /* examine scenarios. */
-    auto scenariox = res.second->scenario_map["x"];
+    auto scenariox = res->scenario_map["x"];
     TEST_ASSERT(!!scenariox);
     TEST_EXPECT(string("x") == scenariox->name);
     TEST_EXPECT(1 == scenariox->execution_map.size());
@@ -1117,16 +1061,14 @@ TEST(step_after_ns_27_with_assertion)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(1 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(1 == res->scenario_map.size());
 
     /* examine scenarios. */
-    auto scenariox = res.second->scenario_map["x"];
+    auto scenariox = res->scenario_map["x"];
     TEST_ASSERT(!!scenariox);
     TEST_EXPECT(string("x") == scenariox->name);
     TEST_EXPECT(1 == scenariox->execution_map.size());
@@ -1170,16 +1112,14 @@ TEST(step_after_ns_27_with_expectation)
 
     auto res = p.parse();
 
-    TEST_ASSERT(!res.first);
-    TEST_ASSERT(!!res.second);
-    TEST_EXPECT(string("foo") == res.second->name);
-    TEST_EXPECT(0 == res.second->component_map.size());
-    TEST_EXPECT(0 == res.second->wire_map.size());
-    TEST_EXPECT(0 == res.second->probe_map.size());
-    TEST_EXPECT(1 == res.second->scenario_map.size());
+    TEST_EXPECT(string("foo") == res->name);
+    TEST_EXPECT(0 == res->component_map.size());
+    TEST_EXPECT(0 == res->wire_map.size());
+    TEST_EXPECT(0 == res->probe_map.size());
+    TEST_EXPECT(1 == res->scenario_map.size());
 
     /* examine scenarios. */
-    auto scenariox = res.second->scenario_map["x"];
+    auto scenariox = res->scenario_map["x"];
     TEST_ASSERT(!!scenariox);
     TEST_EXPECT(string("x") == scenariox->name);
     TEST_EXPECT(1 == scenariox->execution_map.size());

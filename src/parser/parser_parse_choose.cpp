@@ -11,7 +11,7 @@
 using namespace homesim;
 using namespace std;
 
-shared_ptr<parser::error_list>
+void
 homesim::parser::parse_choose(
     initializer_list<
         pair<token, shared_ptr<function<void (const token_pair&)>>>> choices)
@@ -22,13 +22,15 @@ homesim::parser::parse_choose(
 
     stringstream sout;
     choice_map_t choice_map(choices.begin(), choices.end());
-    auto errors = make_shared<error_list>();
 
     token_pair t = read();
 
     choice_map_t::iterator f = choice_map.find(t.first);
     if (choice_map.end() == f)
     {
+        int sl, sc, el, ec;
+        in.read_linecol(sl, sc, el, ec);
+        sout << "Error at " << sl << ":" << sc << ": ";
         sout << "Expecting one of (";
         for (auto i : choice_map)
         {
@@ -36,12 +38,9 @@ homesim::parser::parse_choose(
         }
         sout << "). Got " << token_to_description(t.first) << ".";
 
-        errors->push_back(sout.str());
-        return errors;
+        throw parser_error(sout.str());
     }
 
     if (!!f->second)
         (*f->second)(t);
-
-    return nullptr;
 }

@@ -11,13 +11,12 @@
 using namespace homesim;
 using namespace std;
 
-shared_ptr<parser::error_list>
+void
 homesim::parser::parse_sequence(
     initializer_list<
         pair<token, shared_ptr<function<void (const token_pair&)>>>> seq)
 {
     stringstream sout;
-    auto errors = make_shared<error_list>();
 
     for (auto i : seq)
     {
@@ -26,18 +25,18 @@ homesim::parser::parse_sequence(
         /* fail if not the right token. */
         if (i.first != t.first)
         {
+            int sl, sc, el, ec;
+            in.read_linecol(sl, sc, el, ec);
 
+            sout << "Error at " << sl << ":" << sc << ": ";
             sout << "Expecting " << token_to_description(i.first)
                  << ". Got " << token_to_description(t.first) << ".";
 
-            errors->push_back(sout.str());
-            return errors;
+            throw parser_error(sout.str());
         }
 
         /* otherwise, run the lambda expression if valid. */
         if (!!i.second)
             (*i.second)(t);
     }
-
-    return nullptr;
 }

@@ -20,6 +20,7 @@
 #include <list>
 #include <map>
 #include <memory>
+#include <stdexcept>
 #include <string>
 
 namespace homesim {
@@ -326,23 +327,24 @@ struct config_ast_assertion
 };
 
 /**
+ * \brief This exception is thrown when the parser fails to parse a stream.
+ */
+class parser_error : public std::runtime_error
+{
+public:
+    parser_error(const std::string& what)
+        : runtime_error(what)
+    {
+    }
+};
+
+/**
  * \brief The parser parses an input stream into expressions that can be
  * evaluated.
  */
 class parser
 {
 public:
-
-    typedef
-    std::list<std::string>
-    error_list;
-
-    template <
-        typename result_type>
-    using parse_result =
-    std::pair<
-        std::shared_ptr<error_list>,
-        std::shared_ptr<result_type>>;
 
     /**
      * \brief Create a parser instance backed by the given input stream.
@@ -354,12 +356,11 @@ public:
     /**
      * \brief Parse the input stream producing a config ast.
      *
-     * \returns a pair that contains a shared pointer to the config_ast_module
-     * and a shared pointer to a list of error strings.  On success, the config
-     * module will be populated and the error list pointer will not. On failure,
-     * vice versa.
+     * \returns the module AST on success.
+     *
+     * \throws a parser_error on failure.
      */
-    parse_result<config_ast_module> parse();
+    std::shared_ptr<config_ast_module> parse();
 
 private:
     lexer in;
@@ -367,33 +368,36 @@ private:
 
     token_pair read();
     void put_back(const token_pair&);
-    parse_result<config_ast_component> parse_component();
-    parse_result<config_ast_component> parse_pull(const std::string& type);
-    parse_result<config_ast_wire> parse_wire();
-    parse_result<bool> parse_wire_signal_source();
-    parse_result<config_ast_wire> parse_export_wire();
-    parse_result<config_ast_probe> parse_probe(const std::string& type);
-    parse_result<config_ast_assignment> parse_assign(const std::string& id);
-    parse_result<config_ast_assignment> parse_pin_assign(const std::string& id);
-    parse_result<config_ast_connection> parse_connection(const std::string& id);
-    parse_result<config_ast_scenario> parse_scenario();
-    parse_result<config_ast_execution> parse_execution();
-    parse_result<config_ast_step> parse_step(const std::string& type);
-    parse_result<config_ast_assertion> parse_assertion(const std::string& type);
+    std::shared_ptr<config_ast_component> parse_component();
+    std::shared_ptr<config_ast_component> parse_pull(const std::string& type);
+    std::shared_ptr<config_ast_wire> parse_wire();
+    void parse_wire_signal_source();
+    std::shared_ptr<config_ast_wire> parse_export_wire();
+    std::shared_ptr<config_ast_probe> parse_probe(const std::string& type);
+    std::shared_ptr<config_ast_assignment> parse_assign(const std::string& id);
+    std::shared_ptr<config_ast_assignment>
+    parse_pin_assign(const std::string& id);
+    std::shared_ptr<config_ast_connection>
+    parse_connection(const std::string& id);
+    std::shared_ptr<config_ast_scenario> parse_scenario();
+    std::shared_ptr<config_ast_execution> parse_execution();
+    std::shared_ptr<config_ast_step> parse_step(const std::string& type);
+    std::shared_ptr<config_ast_assertion>
+    parse_assertion(const std::string& type);
     std::shared_ptr<std::function<void(const token_pair&)>>
     simple_assignment_maker(
         std::shared_ptr<config_ast_assignment>);
     void handle_assignment(
         std::shared_ptr<config_ast_component> component,
         std::shared_ptr<config_ast_assignment> assignment);
-    parse_result<std::string> parse_type();
-    parse_result<std::string> parse_wire_ref();
-    parse_result<config_ast_expression>
+    std::shared_ptr<std::string> parse_type();
+    std::shared_ptr<std::string> parse_wire_ref();
+    std::shared_ptr<config_ast_expression>
     parse_complex_expression(const std::string&);
-    parse_result<config_ast_expression>
+    std::shared_ptr<config_ast_expression>
     parse_inner_expression(const std::string&);
 
-    std::shared_ptr<error_list>
+    void
     parse_sequence(
         std::initializer_list<
             std::pair<
@@ -401,7 +405,7 @@ private:
                 std::shared_ptr<std::function<void (const token_pair&)>>>>
             seq);
 
-    std::shared_ptr<error_list>
+    void
     parse_choose(
         std::initializer_list<
             std::pair<

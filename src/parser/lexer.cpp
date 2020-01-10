@@ -17,5 +17,11 @@ using namespace std;
  */
 homesim::lexer::lexer(std::istream& input)
     : in(input)
+    , curline(1)
+    , curcol(0)
+    , start_line(0)
+    , start_col(0)
+    , end_line(0)
+    , end_col(0)
 {
 }

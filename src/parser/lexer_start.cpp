@@ -13,6 +13,9 @@ using namespace std;
 
 void homesim::lexer::start(int ch)
 {
+    start_line = curline;
+    start_col = curcol;
+
     tokenbuf.clear();
 
     accept(ch);

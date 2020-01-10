@@ -13,5 +13,8 @@ using namespace std;
 
 void homesim::lexer::accept(int ch)
 {
+    end_line = curline;
+    end_col = curcol;
+
     tokenbuf.push_back(ch);
 }

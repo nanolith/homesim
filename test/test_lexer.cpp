@@ -2237,3 +2237,125 @@ TEST(component_example)
     TEST_EXPECT(HOMESIM_TOKEN_PAREN_RIGHT == scanner.read());
     TEST_EXPECT(HOMESIM_TOKEN_BRACE_RIGHT == scanner.read());
 }
+
+/**
+ * Line and column info for identifier.
+ */
+TEST(identifier_linecol)
+{
+    stringstream in("foo");
+    lexer scanner(in);
+    int sl, sc, el, ec;
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("foo") == scanner.get_token_string());
+    scanner.read_linecol(sl, sc, el, ec);
+    TEST_EXPECT(1 == sl);
+    TEST_EXPECT(1 == sc);
+    TEST_EXPECT(1 == el);
+    TEST_EXPECT(3 == ec);
+}
+
+/**
+ * Line and column info for identifier.
+ */
+TEST(identifier_linecol2)
+{
+    stringstream in("foo\n");
+    lexer scanner(in);
+    int sl, sc, el, ec;
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("foo") == scanner.get_token_string());
+    scanner.read_linecol(sl, sc, el, ec);
+    TEST_EXPECT(1 == sl);
+    TEST_EXPECT(1 == sc);
+    TEST_EXPECT(1 == el);
+    TEST_EXPECT(3 == ec);
+}
+
+/**
+ * Line and column info for TWO identifiers.
+ */
+TEST(identifiers_linecol)
+{
+    stringstream in("foo bar");
+    lexer scanner(in);
+    int sl, sc, el, ec;
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("foo") == scanner.get_token_string());
+    scanner.read_linecol(sl, sc, el, ec);
+    TEST_EXPECT(1 == sl);
+    TEST_EXPECT(1 == sc);
+    TEST_EXPECT(1 == el);
+    TEST_EXPECT(3 == ec);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("bar") == scanner.get_token_string());
+    scanner.read_linecol(sl, sc, el, ec);
+    TEST_EXPECT(1 == sl);
+    TEST_EXPECT(5 == sc);
+    TEST_EXPECT(1 == el);
+    TEST_EXPECT(7 == ec);
+}
+
+/**
+ * Line and column info for identifier.identifier.
+ */
+TEST(identifier_dot_identifier_linecol)
+{
+    stringstream in("foo.bar");
+    lexer scanner(in);
+    int sl, sc, el, ec;
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("foo") == scanner.get_token_string());
+    scanner.read_linecol(sl, sc, el, ec);
+    TEST_EXPECT(1 == sl);
+    TEST_EXPECT(1 == sc);
+    TEST_EXPECT(1 == el);
+    TEST_EXPECT(3 == ec);
+
+    TEST_EXPECT(HOMESIM_TOKEN_DOT == scanner.read());
+    TEST_EXPECT(string(".") == scanner.get_token_string());
+    scanner.read_linecol(sl, sc, el, ec);
+    TEST_EXPECT(1 == sl);
+    TEST_EXPECT(4 == sc);
+    TEST_EXPECT(1 == el);
+    TEST_EXPECT(4 == ec);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("bar") == scanner.get_token_string());
+    scanner.read_linecol(sl, sc, el, ec);
+    TEST_EXPECT(1 == sl);
+    TEST_EXPECT(5 == sc);
+    TEST_EXPECT(1 == el);
+    TEST_EXPECT(7 == ec);
+}
+
+/**
+ * Line and column info for identifier \n identifier
+ */
+TEST(identifier_newline_identifier_linecol)
+{
+    stringstream in("foo\nbar");
+    lexer scanner(in);
+    int sl, sc, el, ec;
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("foo") == scanner.get_token_string());
+    scanner.read_linecol(sl, sc, el, ec);
+    TEST_EXPECT(1 == sl);
+    TEST_EXPECT(1 == sc);
+    TEST_EXPECT(1 == el);
+    TEST_EXPECT(3 == ec);
+
+    TEST_EXPECT(HOMESIM_TOKEN_IDENTIFIER == scanner.read());
+    TEST_EXPECT(string("bar") == scanner.get_token_string());
+    scanner.read_linecol(sl, sc, el, ec);
+    TEST_EXPECT(2 == sl);
+    TEST_EXPECT(1 == sc);
+    TEST_EXPECT(2 == el);
+    TEST_EXPECT(3 == ec);
+}

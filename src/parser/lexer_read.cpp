@@ -23,7 +23,7 @@ token homesim::lexer::read()
     int ch;
 
     /* skip whitespace. */
-    do { ch = in.get(); } while (isspace(ch));
+    do { ch = read_char(); } while (isspace(ch));
 
     switch (ch)
     {
@@ -126,14 +126,14 @@ token homesim::lexer::read()
             return matchKeywordOrIdentifier("ire", HOMESIM_TOKEN_KEYWORD_WIRE);
 
         default:
-            in.putback(ch);
+            put_back(ch);
             return maybeReadStartIdentifier();
     }
 }
 
 token homesim::lexer::maybeReadAssign()
 {
-    int ch = in.get();
+    int ch = read_char();
 
     accept(ch);
 
@@ -146,7 +146,7 @@ token homesim::lexer::maybeReadAssign()
 
 token homesim::lexer::maybeReadAsterisk()
 {
-    int ch = in.get();
+    int ch = read_char();
 
     /* after an asterisk, a whitespace character terminates the read. */
     if (isspace(ch))
@@ -158,7 +158,7 @@ token homesim::lexer::maybeReadAsterisk()
 
     /* we can't consume any other character, as they might be part of another
      * token. */
-    in.putback(ch);
+    put_back(ch);
 
     /* determine whether this represents a compatible following token. */
     switch (ch)
@@ -181,7 +181,7 @@ token homesim::lexer::maybeReadAsterisk()
 
 token homesim::lexer::maybeReadDotOrNumber()
 {
-    int ch = in.get();
+    int ch = read_char();
 
     /* after a dot, a whitespace character terminates the read. */
     if (isspace(ch))
@@ -199,14 +199,14 @@ token homesim::lexer::maybeReadDotOrNumber()
     }
 
     /* for any other character, this is a dot. */
-    in.putback(ch);
+    put_back(ch);
 
     return HOMESIM_TOKEN_DOT;
 }
 
 token homesim::lexer::maybeReadNumberWithAtLeastOneDigit()
 {
-    int ch = in.get();
+    int ch = read_char();
 
     if (EOF == ch)
         return HOMESIM_TOKEN_INVALID;
@@ -219,19 +219,19 @@ token homesim::lexer::maybeReadNumberWithAtLeastOneDigit()
     }
 
     /* any other character is invalid. */
-    in.putback(ch);
+    put_back(ch);
 
     return HOMESIM_TOKEN_INVALID;
 }
 
 token homesim::lexer::maybeReadNumber()
 {
-    int ch = in.get();
+    int ch = read_char();
 
     while (isdigit(ch))
     {
         accept(ch);
-        ch = in.get();
+        ch = read_char();
     }
 
     /* a space terminates the number. */
@@ -254,12 +254,12 @@ token homesim::lexer::maybeReadNumber()
         case ']':
         case '(':
         case ')':
-            in.putback(ch);
+            put_back(ch);
             return HOMESIM_TOKEN_NUMBER;
 
         /* equals is okay. */
         case '=':
-            in.putback(ch);
+            put_back(ch);
             return HOMESIM_TOKEN_NUMBER;
 
         /* a dot continues the number in decimal form. */
@@ -270,19 +270,19 @@ token homesim::lexer::maybeReadNumber()
         /* anything else is not. */
         default:
             accept(ch);
-            in.putback(ch);
+            put_back(ch);
             return HOMESIM_TOKEN_INVALID;
     }
 }
 
 token homesim::lexer::maybeReadDecimalNumber()
 {
-    int ch = in.get();
+    int ch = read_char();
 
     while (isdigit(ch))
     {
         accept(ch);
-        ch = in.get();
+        ch = read_char();
     }
 
     /* a space terminates the number. */
@@ -305,18 +305,18 @@ token homesim::lexer::maybeReadDecimalNumber()
         case ']':
         case '(':
         case ')':
-            in.putback(ch);
+            put_back(ch);
             return HOMESIM_TOKEN_NUMBER;
 
         /* equals is okay. */
         case '=':
-            in.putback(ch);
+            put_back(ch);
             return HOMESIM_TOKEN_NUMBER;
 
         /* anything else is not. */
         default:
             accept(ch);
-            in.putback(ch);
+            put_back(ch);
             return HOMESIM_TOKEN_INVALID;
     }
 
@@ -325,7 +325,7 @@ token homesim::lexer::maybeReadDecimalNumber()
 
 token homesim::lexer::maybeReadExponentNumberWithSign()
 {
-    int ch = in.get();
+    int ch = read_char();
 
     /* a negative number can start an exponent. */
     if ('-' == ch)
@@ -337,7 +337,7 @@ token homesim::lexer::maybeReadExponentNumberWithSign()
     /* if a digit is discovered, we can terminate with the exponent number. */
     if (isdigit(ch))
     {
-        in.putback(ch);
+        put_back(ch);
         return maybeReadExponentNumber();
     }
 
@@ -347,14 +347,14 @@ token homesim::lexer::maybeReadExponentNumberWithSign()
 
     /* any other value is invalid. */
     accept(ch);
-    in.putback(ch);
+    put_back(ch);
 
     return HOMESIM_TOKEN_INVALID;
 }
 
 token homesim::lexer::maybeReadExponentNumber()
 {
-    int ch = in.get();
+    int ch = read_char();
 
     /* read at least one digit. */
     if (!isdigit(ch))
@@ -362,7 +362,7 @@ token homesim::lexer::maybeReadExponentNumber()
         if (EOF != ch)
         {
             accept(ch);
-            in.putback(ch);
+            put_back(ch);
         }
 
         return HOMESIM_TOKEN_INVALID;
@@ -372,7 +372,7 @@ token homesim::lexer::maybeReadExponentNumber()
     while (isdigit(ch))
     {
         accept(ch);
-        ch = in.get();
+        ch = read_char();
     }
 
     /* a space can successfully terminate the read. */
@@ -380,7 +380,7 @@ token homesim::lexer::maybeReadExponentNumber()
         return HOMESIM_TOKEN_NUMBER;
 
     /* any other character is the start of something else. */
-    in.putback(ch);
+    put_back(ch);
 
     switch (ch)
     {
@@ -406,7 +406,7 @@ token homesim::lexer::maybeReadExponentNumber()
 
 token homesim::lexer::maybeReadStartIdentifier()
 {
-    int ch = in.get();
+    int ch = read_char();
 
     start(ch);
 
@@ -418,12 +418,12 @@ token homesim::lexer::maybeReadStartIdentifier()
 
 token homesim::lexer::maybeReadIdentifier()
 {
-    int ch = in.get();
+    int ch = read_char();
 
     while (isalnum(ch) || '_' == ch)
     {
         accept(ch);
-        ch = in.get();
+        ch = read_char();
     }
 
     /* a space successfully terminates an identifier. */
@@ -431,7 +431,7 @@ token homesim::lexer::maybeReadIdentifier()
         return HOMESIM_TOKEN_IDENTIFIER;
 
     /* any other value is something else. */
-    in.putback(ch);
+    put_back(ch);
 
     switch (ch)
     {
@@ -464,7 +464,7 @@ token homesim::lexer::maybeReadIdentifier()
 
 token homesim::lexer::maybeReadKeywordAfterAssertAtOrIdentifier()
 {
-    int ch = in.get();
+    int ch = read_char();
 
     if (isspace(ch))
         return HOMESIM_TOKEN_IDENTIFIER;
@@ -490,7 +490,7 @@ token homesim::lexer::maybeReadKeywordAfterAssertAtOrIdentifier()
             return HOMESIM_TOKEN_IDENTIFIER;
 
         default:
-            in.putback(ch);
+            put_back(ch);
             return maybeReadIdentifier();
     }
 
@@ -500,16 +500,16 @@ token homesim::lexer::maybeReadKeywordAfterAssertAtOrIdentifier()
 token
 homesim::lexer::maybeReadKeywordExamineExecutionExpectExportExternalOrIdentifier()
 {
-    int ch = in.get();
+    int ch = read_char();
 
     if ('x' != ch)
     {
-        in.putback(ch);
+        put_back(ch);
         return maybeReadIdentifier();
     }
 
     accept(ch);
-    ch = in.get();
+    ch = read_char();
 
     switch (ch)
     {
@@ -538,7 +538,7 @@ homesim::lexer::maybeReadKeywordExamineExecutionExpectExportExternalOrIdentifier
             return HOMESIM_TOKEN_IDENTIFIER;
 
         default:
-            in.putback(ch);
+            put_back(ch);
             return maybeReadIdentifier();
     }
 
@@ -547,7 +547,7 @@ homesim::lexer::maybeReadKeywordExamineExecutionExpectExportExternalOrIdentifier
 
 token homesim::lexer::maybeReadKeywordExpectExportOrIdentifier()
 {
-    int ch = in.get();
+    int ch = read_char();
 
     switch (ch)
     {
@@ -566,14 +566,14 @@ token homesim::lexer::maybeReadKeywordExpectExportOrIdentifier()
             return HOMESIM_TOKEN_IDENTIFIER;
 
         default:
-            in.putback(ch);
+            put_back(ch);
             return maybeReadIdentifier();
     }
 }
 
 token homesim::lexer::maybeReadKeywordPinProbePulldownPullupOrIdentifier()
 {
-    int ch = in.get();
+    int ch = read_char();
 
     switch (ch)
     {
@@ -593,7 +593,7 @@ token homesim::lexer::maybeReadKeywordPinProbePulldownPullupOrIdentifier()
             return HOMESIM_TOKEN_IDENTIFIER;
 
         default:
-            in.putback(ch);
+            put_back(ch);
             return maybeReadIdentifier();
     }
 
@@ -602,25 +602,25 @@ token homesim::lexer::maybeReadKeywordPinProbePulldownPullupOrIdentifier()
 
 token homesim::lexer::maybeReadKeywordPulldownPullupOrIdentifier()
 {
-    int ch = in.get();
+    int ch = read_char();
 
     if ('l' != ch)
     {
-        in.putback(ch);
+        put_back(ch);
         return maybeReadIdentifier();
     }
 
     accept(ch);
-    ch = in.get();
+    ch = read_char();
 
     if ('l' != ch)
     {
-        in.putback(ch);
+        put_back(ch);
         return maybeReadIdentifier();
     }
 
     accept(ch);
-    ch = in.get();
+    ch = read_char();
 
     switch (ch)
     {
@@ -637,7 +637,7 @@ token homesim::lexer::maybeReadKeywordPulldownPullupOrIdentifier()
             return HOMESIM_TOKEN_IDENTIFIER;
 
         default:
-            in.putback(ch);
+            put_back(ch);
             return maybeReadIdentifier();
     }
 
@@ -646,7 +646,7 @@ token homesim::lexer::maybeReadKeywordPulldownPullupOrIdentifier()
 
 token homesim::lexer::maybeReadKeywordScenarioSignalStartStateOrIdentifier()
 {
-    int ch = in.get();
+    int ch = read_char();
 
     switch (ch)
     {
@@ -674,23 +674,23 @@ token homesim::lexer::maybeReadKeywordScenarioSignalStartStateOrIdentifier()
             return HOMESIM_TOKEN_IDENTIFIER;
 
         default:
-            in.putback(ch);
+            put_back(ch);
             return maybeReadIdentifier();
     }
 }
 
 token homesim::lexer::maybeReadKeywordStartStateOrIdentifier()
 {
-    int ch = in.get();
+    int ch = read_char();
 
     if ('a' != ch)
     {
-        in.putback(ch);
+        put_back(ch);
         return maybeReadIdentifier();
     }
 
     accept(ch);
-    ch = in.get();
+    ch = read_char();
 
     switch (ch)
     {
@@ -706,14 +706,14 @@ token homesim::lexer::maybeReadKeywordStartStateOrIdentifier()
             return HOMESIM_TOKEN_IDENTIFIER;
 
         default:
-            in.putback(ch);
+            put_back(ch);
             return maybeReadIdentifier();
     }
 }
 
 token homesim::lexer::maybeReadKeywordTrueTypeOrIdentifier()
 {
-    int ch = in.get();
+    int ch = read_char();
 
     switch (ch)
     {
@@ -729,19 +729,19 @@ token homesim::lexer::maybeReadKeywordTrueTypeOrIdentifier()
             return HOMESIM_TOKEN_IDENTIFIER;
 
         default:
-            in.putback(ch);
+            put_back(ch);
             return maybeReadIdentifier();
     }
 }
 
 token homesim::lexer::maybeReadString()
 {
-    int ch = in.get();
+    int ch = read_char();
 
     while ('"' != ch && EOF != ch)
     {
         accept(ch);
-        ch = in.get();
+        ch = read_char();
     }
 
     if (EOF == ch)
@@ -759,11 +759,11 @@ token homesim::lexer::matchSequence(
 {
     for (auto i : seq)
     {
-        int ch = in.get();
+        int ch = read_char();
 
         if (ch != i)
         {
-            in.putback(ch);
+            put_back(ch);
             return onFail();
         }
 
@@ -777,7 +777,7 @@ token homesim::lexer::matchEndOfKeyword(
     function<token ()> onAccept,
     function<token ()> onFail)
 {
-    int ch = in.get();
+    int ch = read_char();
 
     /* space ends the keyword. */
     if (isspace(ch))
@@ -791,7 +791,7 @@ token homesim::lexer::matchEndOfKeyword(
     }
 
     /* any other value is something else. */
-    in.putback(ch);
+    put_back(ch);
 
     /* handle other possible ending characters. */
     switch (ch)

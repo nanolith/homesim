@@ -170,6 +170,7 @@ public:
 private:
     std::istream& in;
     std::list<char> tokenbuf;
+    std::list<int> putbackbuf;
     int curline;
     int curcol;
     int start_line;
@@ -177,8 +178,10 @@ private:
     int end_line;
     int end_col;
 
+    int read_char();
     void start(int ch);
     void accept(int ch);
+    void put_back(int ch);
 
     token matchSequence(
         const std::string& seq, std::function<token ()> onAccept,

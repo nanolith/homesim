@@ -68,7 +68,9 @@ TEST(simple_component)
     TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barcomp = res->component_map["bar"];
+    auto barcompf = res->component_map.find("bar");
+    TEST_ASSERT(res->component_map.end() != barcompf);
+    auto barcomp = barcompf->second;
     TEST_ASSERT(!!barcomp);
     TEST_EXPECT(string("bar") == barcomp->name);
     TEST_EXPECT(0 == barcomp->config_map.size());
@@ -91,7 +93,9 @@ TEST(simple_component_with_type)
     TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barcomp = res->component_map["bar"];
+    auto barcompf = res->component_map.find("bar");
+    TEST_ASSERT(res->component_map.end() != barcompf);
+    auto barcomp = barcompf->second;
     TEST_ASSERT(!!barcomp);
     TEST_EXPECT(string("bar") == barcomp->name);
     TEST_ASSERT(!!barcomp->type);
@@ -116,7 +120,9 @@ TEST(simple_wire)
     TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barwire = res->wire_map["bar"];
+    auto barwiref = res->wire_map.find("bar");
+    TEST_ASSERT(res->wire_map.end() != barwiref);
+    auto barwire = barwiref->second;
     TEST_ASSERT(!!barwire);
     TEST_EXPECT(string("bar") == barwire->name);
     TEST_EXPECT(0 == barwire->connection_list.size());
@@ -142,7 +148,9 @@ TEST(export_wire)
     TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barwire = res->wire_map["bar"];
+    auto barwiref = res->wire_map.find("bar");
+    TEST_ASSERT(res->wire_map.end() != barwiref);
+    auto barwire = barwiref->second;
     TEST_ASSERT(!!barwire);
     TEST_EXPECT(string("bar") == barwire->name);
     TEST_EXPECT(0 == barwire->connection_list.size());
@@ -175,7 +183,9 @@ TEST(wire_with_external_signal_source)
     TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barwire = res->wire_map["bar"];
+    auto barwiref = res->wire_map.find("bar");
+    TEST_ASSERT(res->wire_map.end() != barwiref);
+    auto barwire = barwiref->second;
     TEST_ASSERT(!!barwire);
     TEST_EXPECT(string("bar") == barwire->name);
     TEST_EXPECT(0 == barwire->connection_list.size());
@@ -208,7 +218,9 @@ TEST(component_with_config_assignment_simple_expression)
     TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barcomp = res->component_map["bar"];
+    auto barcompf = res->component_map.find("bar");
+    TEST_ASSERT(res->component_map.end() != barcompf);
+    auto barcomp = barcompf->second;
     TEST_ASSERT(!!barcomp);
     TEST_EXPECT(string("bar") == barcomp->name);
     TEST_ASSERT(1 == barcomp->config_map.size());
@@ -242,7 +254,9 @@ TEST(component_with_config_assignment_ns_expression)
     TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barcomp = res->component_map["bar"];
+    auto barcompf = res->component_map.find("bar");
+    TEST_ASSERT(res->component_map.end() != barcompf);
+    auto barcomp = barcompf->second;
     TEST_ASSERT(!!barcomp);
     TEST_EXPECT(string("bar") == barcomp->name);
     TEST_ASSERT(1 == barcomp->config_map.size());
@@ -276,7 +290,9 @@ TEST(component_with_config_assignment_us_expression)
     TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barcomp = res->component_map["bar"];
+    auto barcompf = res->component_map.find("bar");
+    TEST_ASSERT(res->component_map.end() != barcompf);
+    auto barcomp = barcompf->second;
     TEST_ASSERT(!!barcomp);
     TEST_EXPECT(string("bar") == barcomp->name);
     TEST_ASSERT(1 == barcomp->config_map.size());
@@ -310,7 +326,9 @@ TEST(component_with_config_assignment_ms_expression)
     TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barcomp = res->component_map["bar"];
+    auto barcompf = res->component_map.find("bar");
+    TEST_ASSERT(res->component_map.end() != barcompf);
+    auto barcomp = barcompf->second;
     TEST_ASSERT(!!barcomp);
     TEST_EXPECT(string("bar") == barcomp->name);
     TEST_ASSERT(1 == barcomp->config_map.size());
@@ -344,7 +362,9 @@ TEST(component_with_config_assignment_kohms_expression)
     TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barcomp = res->component_map["bar"];
+    auto barcompf = res->component_map.find("bar");
+    TEST_ASSERT(res->component_map.end() != barcompf);
+    auto barcomp = barcompf->second;
     TEST_ASSERT(!!barcomp);
     TEST_EXPECT(string("bar") == barcomp->name);
     TEST_ASSERT(1 == barcomp->config_map.size());
@@ -378,7 +398,9 @@ TEST(wire_with_pin_assignment)
     TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barwire = res->wire_map["bus0"];
+    auto barwiref = res->wire_map.find("bus0");
+    TEST_ASSERT(res->wire_map.end() != barwiref);
+    auto barwire = barwiref->second;
     TEST_ASSERT(!!barwire);
     TEST_EXPECT(string("bus0") == barwire->name);
     TEST_ASSERT(1 == barwire->connection_list.size());
@@ -414,7 +436,9 @@ TEST(wire_with_pullup)
     TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barwire = res->wire_map["bus0"];
+    auto barwiref = res->wire_map.find("bus0");
+    TEST_ASSERT(res->wire_map.end() != barwiref);
+    auto barwire = barwiref->second;
     TEST_ASSERT(!!barwire);
     TEST_EXPECT(string("bus0") == barwire->name);
     TEST_ASSERT(0 == barwire->connection_list.size());
@@ -450,7 +474,9 @@ TEST(wire_with_pullup_with_config)
     TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barwire = res->wire_map["bus0"];
+    auto barwiref = res->wire_map.find("bus0");
+    TEST_ASSERT(res->wire_map.end() != barwiref);
+    auto barwire = barwiref->second;
     TEST_ASSERT(!!barwire);
     TEST_EXPECT(string("bus0") == barwire->name);
     TEST_ASSERT(0 == barwire->connection_list.size());
@@ -489,7 +515,9 @@ TEST(wire_with_pulldown)
     TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barwire = res->wire_map["bus0"];
+    auto barwiref = res->wire_map.find("bus0");
+    TEST_ASSERT(res->wire_map.end() != barwiref);
+    auto barwire = barwiref->second;
     TEST_ASSERT(!!barwire);
     TEST_EXPECT(string("bus0") == barwire->name);
     TEST_ASSERT(0 == barwire->connection_list.size());
@@ -525,7 +553,9 @@ TEST(wire_with_pulldown_with_config)
     TEST_EXPECT(0 == res->scenario_map.size());
 
     /* examine components. */
-    auto barwire = res->wire_map["bus0"];
+    auto barwiref = res->wire_map.find("bus0");
+    TEST_ASSERT(res->wire_map.end() != barwiref);
+    auto barwire = barwiref->second;
     TEST_ASSERT(!!barwire);
     TEST_EXPECT(string("bus0") == barwire->name);
     TEST_ASSERT(0 == barwire->connection_list.size());

@@ -231,8 +231,9 @@ struct config_ast_assertion;
 struct config_ast_module
 {
     std::string name;
-    std::map<std::string, std::shared_ptr<config_ast_component>> component_map;
-    std::map<std::string, std::shared_ptr<config_ast_wire>> wire_map;
+    std::multimap<std::string, std::shared_ptr<config_ast_component>>
+    component_map;
+    std::multimap<std::string, std::shared_ptr<config_ast_wire>> wire_map;
     std::map<std::string, std::shared_ptr<config_ast_probe>> probe_map;
     std::map<std::string, std::shared_ptr<config_ast_scenario>> scenario_map;
 };

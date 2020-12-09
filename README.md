@@ -1,7 +1,3 @@
-![Build Status][travis-ci-build-status]
-
-[travis-ci-build-status]: https://travis-ci.org/nanolith/homesim.svg?branch=master
-
 Homebrew Digital Logic Simulator
 ================================
 

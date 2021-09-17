@@ -1,7 +1,7 @@
 /**
  * \file test/test_ic7402.cpp
  *
- * \brief Unit tests for the 74LS00 IC.
+ * \brief Unit tests for the 74LS02 IC.
  *
  * \copyright Copyright 2021 Justin Handville.  All rights reserved.
  */

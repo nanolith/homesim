@@ -1,17 +1,17 @@
 /**
- * \file test/test_ic7400.cpp
+ * \file test/test_ic7402.cpp
  *
  * \brief Unit tests for the 74LS00 IC.
  *
  * \copyright Copyright 2021 Justin Handville.  All rights reserved.
  */
-#include <homesim/ic/7400.h>
+#include <homesim/ic/7402.h>
 #include <minunit/minunit.h>
 
 using namespace homesim;
 using namespace std;
 
-TEST_SUITE(ic7400);
+TEST_SUITE(ic7402);
 
 /**
  * Verify the truth table for the first gate.
@@ -31,30 +31,30 @@ TEST(gate1)
     wire dummy_out2;
     wire dummy_out3;
 
-    ic7400 ic(
-        &lhs, &rhs, &out, &dummy_lhs1, &dummy_rhs1, &dummy_out1,
-        &dummy_out2, &dummy_rhs2, &dummy_lhs2, &dummy_out3, &dummy_rhs3,
-        &dummy_lhs3);
+    ic7402 ic(
+        &out, &lhs, &rhs, &dummy_out1, &dummy_lhs1, &dummy_rhs1,
+        &dummy_lhs2, &dummy_rhs2, &dummy_out2, &dummy_lhs3, &dummy_rhs3,
+        &dummy_out3);
 
-    /* false nand false = true. */
+    /* false nor false = true. */
     lhs.set_signal(false);
     rhs.set_signal(false);
     propagate();
     TEST_EXPECT(out.get_signal() == true);
 
-    /* false nand true = true. */
+    /* false nor true = false. */
     lhs.set_signal(false);
     rhs.set_signal(true);
     propagate();
-    TEST_EXPECT(out.get_signal() == true);
+    TEST_EXPECT(out.get_signal() == false);
 
-    /* true nand false = true. */
+    /* true nor false = false. */
     lhs.set_signal(true);
     rhs.set_signal(false);
     propagate();
-    TEST_EXPECT(out.get_signal() == true);
+    TEST_EXPECT(out.get_signal() == false);
 
-    /* true nand true = false. */
+    /* true nor true = false. */
     lhs.set_signal(true);
     rhs.set_signal(true);
     propagate();
@@ -79,30 +79,30 @@ TEST(gate2)
     wire dummy_out2;
     wire dummy_out3;
 
-    ic7400 ic(
-        &dummy_lhs1, &dummy_rhs1, &dummy_out1, &lhs, &rhs, &out,
-        &dummy_out2, &dummy_rhs2, &dummy_lhs2, &dummy_out3, &dummy_rhs3,
-        &dummy_lhs3);
+    ic7402 ic(
+        &dummy_out1, &dummy_lhs1, &dummy_rhs1, &out, &lhs, &rhs,
+        &dummy_lhs2, &dummy_rhs2, &dummy_out2, &dummy_lhs3, &dummy_rhs3,
+        &dummy_out3);
 
-    /* false nand false = true. */
+    /* false nor false = true. */
     lhs.set_signal(false);
     rhs.set_signal(false);
     propagate();
     TEST_EXPECT(out.get_signal() == true);
 
-    /* false nand true = true. */
+    /* false nor true = false. */
     lhs.set_signal(false);
     rhs.set_signal(true);
     propagate();
-    TEST_EXPECT(out.get_signal() == true);
+    TEST_EXPECT(out.get_signal() == false);
 
-    /* true nand false = true. */
+    /* true nor false = false. */
     lhs.set_signal(true);
     rhs.set_signal(false);
     propagate();
-    TEST_EXPECT(out.get_signal() == true);
+    TEST_EXPECT(out.get_signal() == false);
 
-    /* true nand true = false. */
+    /* true nor true = false. */
     lhs.set_signal(true);
     rhs.set_signal(true);
     propagate();
@@ -127,30 +127,30 @@ TEST(gate3)
     wire dummy_out2;
     wire dummy_out3;
 
-    ic7400 ic(
-        &dummy_lhs1, &dummy_rhs1, &dummy_out1,
-        &dummy_lhs2, &dummy_rhs2, &dummy_out2,
-        &out, &rhs, &lhs, &dummy_out3, &dummy_rhs3, &dummy_lhs3);
+    ic7402 ic(
+        &dummy_out1, &dummy_lhs1, &dummy_rhs1,
+        &dummy_out2, &dummy_lhs2, &dummy_rhs2,
+        &lhs, &rhs, &out, &dummy_lhs3, &dummy_rhs3, &dummy_out3);
 
-    /* false nand false = true. */
+    /* false nor false = true. */
     lhs.set_signal(false);
     rhs.set_signal(false);
     propagate();
     TEST_EXPECT(out.get_signal() == true);
 
-    /* false nand true = true. */
+    /* false nor true = false. */
     lhs.set_signal(false);
     rhs.set_signal(true);
     propagate();
-    TEST_EXPECT(out.get_signal() == true);
+    TEST_EXPECT(out.get_signal() == false);
 
-    /* true nand false = true. */
+    /* true nor false = false. */
     lhs.set_signal(true);
     rhs.set_signal(false);
     propagate();
-    TEST_EXPECT(out.get_signal() == true);
+    TEST_EXPECT(out.get_signal() == false);
 
-    /* true nand true = false. */
+    /* true nor true = false. */
     lhs.set_signal(true);
     rhs.set_signal(true);
     propagate();
@@ -175,30 +175,30 @@ TEST(gate4)
     wire dummy_out2;
     wire dummy_out3;
 
-    ic7400 ic(
-        &dummy_lhs1, &dummy_rhs1, &dummy_out1,
-        &dummy_lhs2, &dummy_rhs2, &dummy_out2,
-        &dummy_out3, &dummy_rhs3, &dummy_lhs3, &out, &rhs, &lhs);
+    ic7402 ic(
+        &dummy_out1, &dummy_lhs1, &dummy_rhs1,
+        &dummy_out2, &dummy_lhs2, &dummy_rhs2,
+        &dummy_lhs3, &dummy_rhs3, &dummy_out3, &lhs, &rhs, &out);
 
-    /* false nand false = true. */
+    /* false nor false = true. */
     lhs.set_signal(false);
     rhs.set_signal(false);
     propagate();
     TEST_EXPECT(out.get_signal() == true);
 
-    /* false nand true = true. */
+    /* false nor true = false. */
     lhs.set_signal(false);
     rhs.set_signal(true);
     propagate();
-    TEST_EXPECT(out.get_signal() == true);
+    TEST_EXPECT(out.get_signal() == false);
 
-    /* true nand false = true. */
+    /* true nor false = false. */
     lhs.set_signal(true);
     rhs.set_signal(false);
     propagate();
-    TEST_EXPECT(out.get_signal() == true);
+    TEST_EXPECT(out.get_signal() == false);
 
-    /* true nand true = false. */
+    /* true nor true = false. */
     lhs.set_signal(true);
     rhs.set_signal(true);
     propagate();
@@ -214,12 +214,12 @@ TEST(propagation_time_default)
     global_agenda.clear();
 
     /* the default IC propagation delay is 22 nanoseconds. */
-    TEST_EXPECT(ic7400_delay == 22.0 * nanoseconds_to_seconds_scale);
+    TEST_EXPECT(ic7402_delay == 22.0 * nanoseconds_to_seconds_scale);
 
     /* the global agenda starts at t = 0. */
     TEST_ASSERT(global_agenda.current_time() == 0.0);
 
-    /* create 7400 ic. */
+    /* create 7402 ic. */
     wire lhs;
     wire rhs;
     wire out;
@@ -232,17 +232,17 @@ TEST(propagation_time_default)
     wire dummy_out1;
     wire dummy_out2;
     wire dummy_out3;
-    ic7400 ic(
-        &lhs, &rhs, &out, &dummy_lhs1, &dummy_rhs1, &dummy_out1,
-        &dummy_out2, &dummy_rhs2, &dummy_lhs2, &dummy_out3, &dummy_rhs3,
-        &dummy_lhs3);
+    ic7402 ic(
+        &out, &lhs, &rhs, &dummy_out1, &dummy_lhs1, &dummy_rhs1,
+        &dummy_lhs2, &dummy_rhs2, &dummy_out2, &dummy_lhs3, &dummy_rhs3,
+        &dummy_out3);
 
     /* propagate the initial signal for the ic. */
     propagate();
 
     /* verify that current time according to the global agenda is our
      * propagation delay. */
-    TEST_ASSERT(global_agenda.current_time() == ic7400_delay);
+    TEST_ASSERT(global_agenda.current_time() == ic7402_delay);
 }
 
 /**
@@ -258,7 +258,7 @@ TEST(propagation_time_override)
     /* the global agenda starts at t = 0. */
     TEST_ASSERT(global_agenda.current_time() == 0.0);
 
-    /* create 7400 ic. */
+    /* create 7402 ic. */
     wire lhs;
     wire rhs;
     wire out;
@@ -271,10 +271,10 @@ TEST(propagation_time_override)
     wire dummy_out1;
     wire dummy_out2;
     wire dummy_out3;
-    ic7400 ic(
-        &lhs, &rhs, &out, &dummy_lhs1, &dummy_rhs1, &dummy_out1,
-        &dummy_out2, &dummy_rhs2, &dummy_lhs2, &dummy_out3, &dummy_rhs3,
-        &dummy_lhs3, EXPECTED_PROPAGATION_DELAY);
+    ic7402 ic(
+        &out, &lhs, &rhs, &dummy_out1, &dummy_lhs1, &dummy_rhs1,
+        &dummy_lhs2, &dummy_rhs2, &dummy_out2, &dummy_lhs3, &dummy_rhs3,
+        &dummy_out3, EXPECTED_PROPAGATION_DELAY);
 
     /* propagate the initial signal for the ic. */
     propagate();

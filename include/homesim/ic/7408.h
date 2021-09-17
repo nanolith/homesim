@@ -1,9 +1,9 @@
 /**
  * \file homesim/ic/7408.h
  *
- * \brief Declarations for a 7402-like (Quad AND Gate) IC.
+ * \brief Declarations for a 7408-like (Quad AND Gate) IC.
  *
- * \copyright Copyright 2020 Justin Handville. All rights reserved.
+ * \copyright Copyright 2020-2021 Justin Handville. All rights reserved.
  */
 #ifndef  HOMESIM_IC_7408_HEADER_GUARD
 # define HOMESIM_IC_7408_HEADER_GUARD

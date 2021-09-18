@@ -42,7 +42,7 @@ void homesim::wire::change_connection_type(
     }
     /* if there are no longer any outputs, and this change was the cause, check
      * for pull-up / pull-downs. */
-    else if (outputs == 0 && oldty == WIRE_CONNECTION_TYPE_OUTPUT)
+    else if (outputs == 0)
     {
         if (pull_ups > 0 && pull_downs == 0)
         {
@@ -51,6 +51,10 @@ void homesim::wire::change_connection_type(
         else if (pull_downs > 0 && pull_ups == 0)
         {
             set_signal(false);
+        }
+        else
+        {
+            floating = true;
         }
     }
 

@@ -127,17 +127,20 @@ TEST(dir_low_oe_low_floating)
         TEST_EXPECT(a[i].get_signal() == false);
     }
 
-    /* Set B wires to high. */
+    /* test channel by channel. */
     for (int i = 0; i < 8; ++i)
     {
+        /* A wire should be low. */
+        TEST_EXPECT(a[i].is_floating() == false);
+        TEST_EXPECT(a[i].get_signal() == false);
+
+        /* Set B wire to high. */
         b[i].set_signal(true);
-    }
 
-    propagate();
+        /* propagate the change. */
+        propagate();
 
-    /* A wires should be high. */
-    for (int i = 0; i < 8; ++i)
-    {
+        /* A wire should be high. */
         TEST_EXPECT(a[i].is_floating() == false);
         TEST_EXPECT(a[i].get_signal() == true);
     }
@@ -183,17 +186,20 @@ TEST(dir_high_oe_low_floating)
         TEST_EXPECT(b[i].get_signal() == false);
     }
 
-    /* Set A wires to high. */
+    /* test channel by channel. */
     for (int i = 0; i < 8; ++i)
     {
+        /* B wire should be low. */
+        TEST_EXPECT(b[i].is_floating() == false);
+        TEST_EXPECT(b[i].get_signal() == false);
+
+        /* Set A wire to high. */
         a[i].set_signal(true);
-    }
 
-    propagate();
+        /* propagate the change. */
+        propagate();
 
-    /* B wires should be high. */
-    for (int i = 0; i < 8; ++i)
-    {
+        /* B wire should be high. */
         TEST_EXPECT(b[i].is_floating() == false);
         TEST_EXPECT(b[i].get_signal() == true);
     }

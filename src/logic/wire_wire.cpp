@@ -26,4 +26,5 @@ homesim::wire::wire()
     , pull_downs(0)
     , pull_ups(0)
 {
+    fault_check();
 }

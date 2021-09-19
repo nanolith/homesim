@@ -21,10 +21,10 @@ TEST(fault_defaults)
 {
     auto w = make_shared<wire>();
 
-    /* if the connection framework is not used, there is not a fault. */
+    /* By default, a wire has no faults. */
     TEST_ASSERT( !w->has_fault() );
-    /* likewise, floating is disabled. */
-    TEST_ASSERT( !w->is_floating() );
+    /* A wire with no connections is, by definition, floating. */
+    TEST_ASSERT( w->is_floating() );
 }
 
 /**

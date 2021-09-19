@@ -28,7 +28,7 @@ namespace homesim {
 constexpr double ic74173_delay = 23.0 * nanoseconds_to_seconds_scale;
 
 /**
- * \brief The ic7402 simulates a 7400 (Quad NAND Gate) IC.
+ * \brief The ic74173 simulates a 74173 Quad D-type Register.
  */
 class ic74173
 {

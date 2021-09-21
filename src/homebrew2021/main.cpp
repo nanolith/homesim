@@ -70,6 +70,24 @@ int main(int argc, char* argv[])
     ctrl_write_b->add_connection(WIRE_CONNECTION_TYPE_OUTPUT);
     ctrl_write_b->set_signal(false);
 
+    /* create the clear_flags control wire. */
+    shared_ptr<wire> ctrl_clr_flags = make_shared<wire>();
+    ctrl_clr_flags->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    ctrl_clr_flags->add_connection(WIRE_CONNECTION_TYPE_OUTPUT);
+    ctrl_clr_flags->set_signal(false);
+
+    /* create the read flags control wire. */
+    shared_ptr<wire> ctrl_read_flags = make_shared<wire>();
+    ctrl_read_flags->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    ctrl_read_flags->add_connection(WIRE_CONNECTION_TYPE_OUTPUT);
+    ctrl_read_flags->set_signal(false);
+
+    /* create the write flags control wire. */
+    shared_ptr<wire> ctrl_write_flags = make_shared<wire>();
+    ctrl_write_flags->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    ctrl_write_flags->add_connection(WIRE_CONNECTION_TYPE_OUTPUT);
+    ctrl_write_flags->set_signal(false);
+
     /* create the A register. */
     shared_ptr<basic_register> areg =
         make_shared<basic_register>(
@@ -81,6 +99,12 @@ int main(int argc, char* argv[])
         make_shared<basic_register>(
             dbus.get(), clock.get(), ctrl_clr_b.get(), ctrl_read_b.get(),
             ctrl_write_b.get());
+
+    /* create the flags register. */
+    shared_ptr<basic_register> flagsreg =
+        make_shared<basic_register>(
+            dbus.get(), clock.get(), ctrl_clr_flags.get(),
+            ctrl_read_flags.get(), ctrl_write_flags.get());
 
     /* before starting, propagate... */
     propagate();
@@ -94,6 +118,11 @@ int main(int argc, char* argv[])
     verify_register(
         breg.get(), dbus.get(), clock.get(), ctrl_clr_b.get(),
         ctrl_read_b.get(), ctrl_write_b.get());
+
+    /* verify the flags register. */
+    verify_register(
+        flagsreg.get(), dbus.get(), clock.get(), ctrl_clr_flags.get(),
+        ctrl_read_flags.get(), ctrl_write_flags.get());
 
     return 0;
 }

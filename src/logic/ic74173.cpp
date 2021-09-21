@@ -118,25 +118,28 @@ homesim::ic74173::ic74173(
         if (clk->get_signal() == false)
         {
             global_agenda.add(delay, output_registers);
-            return;
         }
-
         /* if either data enable pin is set, output the registers. */
-        if (g1->get_signal() == true || g2->get_signal() == true)
+        else if (g1->get_signal() == true || g2->get_signal() == true)
         {
             global_agenda.add(delay, output_registers);
-            return;
         }
 
-        /* in any other state, assign the register to the data input. */
-        global_agenda.add(delay, [=]() {
-            reg[0] = in1d->get_signal();
-            reg[1] = in2d->get_signal();
-            reg[2] = in3d->get_signal();
-            reg[3] = in4d->get_signal();
+        if (
+             clk->get_signal() == true
+          && g1->get_signal() == false
+          && g2->get_signal() == false)
+        {
+            /* in any other state, assign the register to the data input. */
+            global_agenda.add(delay, [=]() {
+                reg[0] = in1d->get_signal();
+                reg[1] = in2d->get_signal();
+                reg[2] = in3d->get_signal();
+                reg[3] = in4d->get_signal();
 
-            output_registers();
-        });
+                output_registers();
+            });
+        }
     };
 
     clr->add_action(clear_signal_proc);

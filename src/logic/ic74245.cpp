@@ -5,6 +5,7 @@
  *
  * \copyright Copyright 2021 Justin Handville. All rights reserved.
  */
+
 #include <homesim/ic/74245.h>
 
 using namespace std;
@@ -12,7 +13,7 @@ using namespace std;
 /**
  * \brief ic74245 constructor, with parameters in roughly DIP package order.
  *
- * \param dir           If high, B --> A; if low, A --> B.
+ * \param dir           If low, B --> A; if high, A --> B.
  * \param a1            Channel 1, A side.
  * \param a2            Channel 2, A side.
  * \param a3            Channel 3, A side.
@@ -141,7 +142,7 @@ homesim::ic74245::ic74245(
                     global_agenda.add(delay, b2a(a8,b8));
                 }
             }
-            /* output B --> A when dir is high. */
+            /* output A --> B when dir is high. */
             else
             {
                 if (conn_type_b != WIRE_CONNECTION_TYPE_OUTPUT)

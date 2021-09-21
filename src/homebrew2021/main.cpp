@@ -92,8 +92,8 @@ int main(int argc, char* argv[])
 
     /* verify the b register. */
     verify_register(
-        breg.get(), dbus.get(), clock.get(), ctrl_clr_a.get(),
-        ctrl_read_a.get(), ctrl_write_a.get());
+        breg.get(), dbus.get(), clock.get(), ctrl_clr_b.get(),
+        ctrl_read_b.get(), ctrl_write_b.get());
 
     return 0;
 }
@@ -106,6 +106,7 @@ verify_register(
     /* the bus should start low. */
     for (int i = 0; i < 8; ++i)
     {
+        assert(reg->get_data_wire(i)->get_signal() == false);
         assert(bus->get_wire(i)->get_signal() == false);
     }
 
@@ -135,19 +136,12 @@ verify_register(
     read->set_signal(true);
     propagate();
 
-    /* pulse clock. */
-    clock->set_signal(true);
-    propagate();
-
     /* the register should be output to the bus. */
     for (int i = 0; i < 8; ++i)
     {
+        assert(reg->get_data_wire(i)->get_signal() == true);
         assert(bus->get_wire(i)->get_signal() == true);
     }
-
-    /* turn off clock. */
-    clock->set_signal(false);
-    propagate();
 
     /* turn off read. */
     read->set_signal(false);
@@ -165,19 +159,12 @@ verify_register(
     read->set_signal(true);
     propagate();
 
-    /* pulse the clock. */
-    clock->set_signal(true);
-    propagate();
-
     /* the register should be output to the bus. */
     for (int i = 0; i < 8; ++i)
     {
+        assert(reg->get_data_wire(i)->get_signal() == false);
         assert(bus->get_wire(i)->get_signal() == false);
     }
-
-    /* turn off the clock. */
-    clock->set_signal(false);
-    propagate();
 
     /* turn off read. */
     read->set_signal(false);

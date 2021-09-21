@@ -37,7 +37,7 @@ public:
     /**
      * \brief ic74245 constructor, with parameters in roughly DIP package order.
      *
-     * \param dir           If high, B --> A; if low, A --> B.
+     * \param dir           If low, B --> A; if high, A --> B.
      * \param a1            Channel 1, A side.
      * \param a2            Channel 2, A side.
      * \param a3            Channel 3, A side.

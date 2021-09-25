@@ -109,6 +109,8 @@ constexpr inline std::size_t compute_alu_address(
 
 class alu_rom_a
 {
+public:
+
     /**
      * \brief Create the A ROM for the ALU from output wires, a vector of
      * address wires, and a vector of bytes.
@@ -123,14 +125,12 @@ class alu_rom_a
      * \param out8                      Output wire 8.
      * \param oe                        Output enable wire.
      * \param addrs                     Vector of address wires.
-     * \param bytes                     Vector of ROM bytes.
      */
     alu_rom_a(
         homesim::wire* out1, homesim::wire* out2, homesim::wire* out3,
         homesim::wire* out4, homesim::wire* out5, homesim::wire* out6,
         homesim::wire* out7, homesim::wire* out8, homesim::wire* oe,
-        const std::vector<homesim::wire*>& addrs,
-        const std::vector<std::uint8_t>& bytes);
+        const std::vector<homesim::wire*>& addrs);
 
 private:
     std::shared_ptr<homesim::icrom> rom;
@@ -139,6 +139,7 @@ private:
 class alu_rom_b
 {
 public:
+
     /**
      * \brief Create the B ROM for the ALU from output wires, a vector of
      * address wires, and a vector of bytes.
@@ -153,14 +154,12 @@ public:
      * \param out8                      Output wire 8.
      * \param oe                        Output enable wire.
      * \param addrs                     Vector of address wires.
-     * \param bytes                     Vector of ROM bytes.
      */
     alu_rom_b(
         homesim::wire* out1, homesim::wire* out2, homesim::wire* out3,
         homesim::wire* out4, homesim::wire* out5, homesim::wire* out6,
         homesim::wire* out7, homesim::wire* out8, homesim::wire* oe,
-        const std::vector<homesim::wire*>& addrs,
-        const std::vector<std::uint8_t>& bytes);
+        const std::vector<homesim::wire*>& addrs);
 
 private:
     std::shared_ptr<homesim::icrom> rom;
@@ -169,6 +168,7 @@ private:
 class alu_rom_flags
 {
 public:
+
     /**
      * \brief Create the FLAGS ROM for the ALU from output wires, a vector of
      * address wires, and a vector of bytes.
@@ -183,14 +183,12 @@ public:
      * \param out8                      Output wire 8.
      * \param oe                        Output enable wire.
      * \param addrs                     Vector of address wires.
-     * \param bytes                     Vector of ROM bytes.
      */
     alu_rom_flags(
         homesim::wire* out1, homesim::wire* out2, homesim::wire* out3,
         homesim::wire* out4, homesim::wire* out5, homesim::wire* out6,
         homesim::wire* out7, homesim::wire* out8, homesim::wire* oe,
-        const std::vector<homesim::wire*>& addrs,
-        const std::vector<std::uint8_t>& bytes);
+        const std::vector<homesim::wire*>& addrs);
 
 private:
     std::shared_ptr<homesim::icrom> rom;

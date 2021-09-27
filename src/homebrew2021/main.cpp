@@ -11,7 +11,7 @@
 #include <iostream>
 
 #include "alu.h"
-#include "basic_register.h"
+#include "bus_register.h"
 #include "data_bus.h"
 
 using namespace homebrew2021;
@@ -21,7 +21,7 @@ using namespace std;
 /* forward decls. */
 static void
 verify_register(
-    basic_register* reg, data_bus* bus, wire* clock, wire* clear, wire* read,
+    bus_register* reg, data_bus* bus, wire* clock, wire* clear, wire* read,
     wire* write);
 static void
 verify_alu_rom(
@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
     verify_alu_rom(get_or_create_alu_rom());
 
     /* create the data bus. */
-    shared_ptr<data_bus> dbus = make_shared<data_bus>();
+    auto dbus = make_shared<data_bus>();
 
     /* create the clock wire. */
     shared_ptr<wire> clock = make_shared<wire>();
@@ -96,20 +96,20 @@ int main(int argc, char* argv[])
     ctrl_write_flags->set_signal(false);
 
     /* create the A register. */
-    shared_ptr<basic_register> areg =
-        make_shared<basic_register>(
+    auto areg =
+        make_shared<bus_register>(
             dbus.get(), clock.get(), ctrl_clr_a.get(), ctrl_read_a.get(),
             ctrl_write_a.get());
 
     /* create the B register. */
-    shared_ptr<basic_register> breg =
-        make_shared<basic_register>(
+    auto breg =
+        make_shared<bus_register>(
             dbus.get(), clock.get(), ctrl_clr_b.get(), ctrl_read_b.get(),
             ctrl_write_b.get());
 
     /* create the flags register. */
-    shared_ptr<basic_register> flagsreg =
-        make_shared<basic_register>(
+    auto flagsreg =
+        make_shared<bus_register>(
             dbus.get(), clock.get(), ctrl_clr_flags.get(),
             ctrl_read_flags.get(), ctrl_write_flags.get());
 
@@ -136,7 +136,7 @@ int main(int argc, char* argv[])
 
 static void
 verify_register(
-    basic_register* reg, data_bus* bus, wire* clock, wire* clear, wire* read,
+    bus_register* reg, data_bus* bus, wire* clock, wire* clear, wire* read,
     wire* write)
 {
     /* the bus should start low. */

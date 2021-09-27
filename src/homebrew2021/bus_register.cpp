@@ -1,17 +1,17 @@
 /**
- * \file basic_register.cpp
+ * \file bus_register.cpp
  *
- * \brief basic_register constructor.
+ * \brief bus_register constructor.
  *
  * \copyright Copyright 2021 Justin Handville. All rights reserved.
  */
 
-#include "basic_register.h"
+#include "bus_register.h"
 
 using namespace homesim;
 using namespace std;
 
-homebrew2021::basic_register::basic_register(
+homebrew2021::bus_register::bus_register(
     data_bus* bus, wire* clock, wire* clear, wire* read, wire* write)
 {
     /* create data wires for the register. */

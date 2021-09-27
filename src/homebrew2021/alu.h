@@ -113,7 +113,7 @@ public:
 
     /**
      * \brief Create the A ROM for the ALU from output wires, a vector of
-     * address wires, and a vector of bytes.
+     * address wires.
      *
      * \param out1                      Output wire 1.
      * \param out2                      Output wire 2.
@@ -142,7 +142,7 @@ public:
 
     /**
      * \brief Create the B ROM for the ALU from output wires, a vector of
-     * address wires, and a vector of bytes.
+     * address wires.
      *
      * \param out1                      Output wire 1.
      * \param out2                      Output wire 2.
@@ -171,7 +171,7 @@ public:
 
     /**
      * \brief Create the FLAGS ROM for the ALU from output wires, a vector of
-     * address wires, and a vector of bytes.
+     * address wires.
      *
      * \param out1                      Output wire 1.
      * \param out2                      Output wire 2.
@@ -192,6 +192,74 @@ public:
 
 private:
     std::shared_ptr<homesim::icrom> rom;
+};
+
+class alu
+{
+    /**
+     * \brief Create the ALU from a data wires, b data wires, operation control
+     * wires, read control wires for the a prime, b prime, and flags prime
+     * registers, and an ALU op control wire.
+     *
+     * \param a1                        Data Wire A1.
+     * \param a2                        Data Wire A2.
+     * \param a3                        Data Wire A3.
+     * \param a4                        Data Wire A4.
+     * \param a5                        Data Wire A5.
+     * \param a6                        Data Wire A6.
+     * \param a7                        Data Wire A7.
+     * \param a8                        Data Wire A8.
+     * \param b1                        Data Wire B1.
+     * \param b2                        Data Wire B2.
+     * \param b3                        Data Wire B3.
+     * \param b4                        Data Wire B4.
+     * \param b5                        Data Wire B5.
+     * \param b6                        Data Wire B6.
+     * \param b7                        Data Wire B7.
+     * \param b8                        Data Wire B8.
+     * \param op1                       Data Wire op1.
+     * \param op2                       Data Wire op2.
+     * \param op3                       Data Wire op3.
+     * \param op4                       Data Wire op4.
+     * \param op5                       Data Wire op5.
+     * \param readap                    Read control for a'.
+     * \param readbp                    Read control for b'.
+     * \param readflagsp                Read control for flags'.
+     * \param opctl                     The op control register.
+     * \param bus                       The data bus.
+     * \param clk                       The clock.
+     */
+    alu(
+        homesim::wire* a1,
+        homesim::wire* a2,
+        homesim::wire* a3,
+        homesim::wire* a4,
+        homesim::wire* a5,
+        homesim::wire* a6,
+        homesim::wire* a7,
+        homesim::wire* a8,
+        homesim::wire* b1,
+        homesim::wire* b2,
+        homesim::wire* b3,
+        homesim::wire* b4,
+        homesim::wire* b5,
+        homesim::wire* b6,
+        homesim::wire* b7,
+        homesim::wire* b8,
+        homesim::wire* op1,
+        homesim::wire* op2,
+        homesim::wire* op3,
+        homesim::wire* op4,
+        homesim::wire* op5,
+        homesim::wire* readap,
+        homesim::wire* readbp,
+        homesim::wire* readflagsp,
+        homesim::wire* opctl,
+        data_bus* bus,
+        homesim::wire* clk);
+
+/* TODO - extract partial register implementation from basic_register that we
+ * can use here to create the prime registers. */
 };
 
 } /* namespace homebrew2021 */

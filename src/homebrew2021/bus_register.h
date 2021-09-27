@@ -1,7 +1,7 @@
 /**
- * \file basic_register.h
+ * \file bus_register.h
  *
- * \brief A general purpose 8-bit register.
+ * \brief A general purpose 8-bit register, connected to the bus.
  *
  * \copyright Copyright 2021 Justin Handville. All rights reserved.
  */
@@ -18,16 +18,16 @@ namespace homebrew2021
 {
 
 /**
- * \brief A general purpose 8-bit register.
+ * \brief A general purpose 8-bit register, connected to the bus.
  */
-class basic_register
+class bus_register
 {
 public:
 
     /**
-     * \brief Constructor for the basic register.
+     * \brief Constructor for the bus register.
      */
-    basic_register(
+    bus_register(
         data_bus* bus, homesim::wire* clock, homesim::wire* clear,
         homesim::wire* read, homesim::wire* write);
 

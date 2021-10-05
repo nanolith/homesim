@@ -11,6 +11,7 @@
 #include <iostream>
 
 #include "alu.h"
+#include "basic_register.h"
 #include "bus_register.h"
 #include "data_bus.h"
 
@@ -26,9 +27,14 @@ verify_register(
 static void
 verify_alu_rom(
     shared_ptr<alu_rom_bytes> rom);
+static void
+verify_basic_register();
 
 int main(int argc, char* argv[])
 {
+    /* verify that the basic register works. */
+    verify_basic_register();
+
     /* verify that the ALU ROM is correct. */
     verify_alu_rom(get_or_create_alu_rom());
 
@@ -883,4 +889,174 @@ static void verify_alu_ff(
     assert(ff_result_a == expected_ff_result_a);
     assert(ff_result_b == expected_ff_result_b);
     assert(ff_result_flags == expected_ff_result_flags);
+}
+
+static void
+verify_basic_register()
+{
+    /* create the clock. */
+    auto clock = make_shared<wire>();
+    clock->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    clock->set_signal(false);
+    propagate();
+
+    /* create the clear wire. */
+    auto clear = make_shared<wire>();
+    clear->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    clock->set_signal(false);
+    propagate();
+
+    /* create the read wire. */
+    auto read = make_shared<wire>();
+    read->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    read->set_signal(false);
+    propagate();
+
+    /* create the write wire. */
+    auto write = make_shared<wire>();
+    write->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    write->set_signal(false);
+    propagate();
+
+    /* create the input wires. */
+    auto in1 = make_shared<wire>();
+    in1->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    in1->set_signal(false);
+    auto in2 = make_shared<wire>();
+    in2->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    in2->set_signal(false);
+    auto in3 = make_shared<wire>();
+    in3->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    in3->set_signal(false);
+    auto in4 = make_shared<wire>();
+    in4->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    in4->set_signal(false);
+    auto in5 = make_shared<wire>();
+    in5->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    in5->set_signal(false);
+    auto in6 = make_shared<wire>();
+    in6->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    in6->set_signal(false);
+    auto in7 = make_shared<wire>();
+    in7->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    in7->set_signal(false);
+    auto in8 = make_shared<wire>();
+    in8->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    in8->set_signal(false);
+    propagate();
+
+    /* create the output wires. */
+    auto out1 = make_shared<wire>();
+    out1->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    out1->set_signal(false);
+    auto out2 = make_shared<wire>();
+    out2->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    out2->set_signal(false);
+    auto out3 = make_shared<wire>();
+    out3->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    out3->set_signal(false);
+    auto out4 = make_shared<wire>();
+    out4->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    out4->set_signal(false);
+    auto out5 = make_shared<wire>();
+    out5->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    out5->set_signal(false);
+    auto out6 = make_shared<wire>();
+    out6->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    out6->set_signal(false);
+    auto out7 = make_shared<wire>();
+    out7->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    out7->set_signal(false);
+    auto out8 = make_shared<wire>();
+    out8->add_connection(WIRE_CONNECTION_TYPE_PULL_DOWN);
+    out8->set_signal(false);
+    propagate();
+
+    /* create a basic register. */
+    auto reg = make_shared<basic_register>(
+        clock.get(), clear.get(), read.get(), write.get(), in1.get(), in2.get(),
+        in3.get(), in4.get(), in5.get(), in6.get(), in7.get(), in8.get(),
+        out1.get(), out2.get(), out3.get(), out4.get(), out5.get(), out6.get(),
+        out7.get(), out8.get());
+    propagate();
+
+    /* write all highs to the register. */
+    in1->add_connection(WIRE_CONNECTION_TYPE_OUTPUT);
+    in1->change_connection_type(
+        WIRE_CONNECTION_TYPE_OUTPUT, WIRE_CONNECTION_TYPE_OUTPUT, true);
+    in2->add_connection(WIRE_CONNECTION_TYPE_OUTPUT);
+    in2->change_connection_type(
+        WIRE_CONNECTION_TYPE_OUTPUT, WIRE_CONNECTION_TYPE_OUTPUT, true);
+    in3->add_connection(WIRE_CONNECTION_TYPE_OUTPUT);
+    in3->change_connection_type(
+        WIRE_CONNECTION_TYPE_OUTPUT, WIRE_CONNECTION_TYPE_OUTPUT, true);
+    in4->add_connection(WIRE_CONNECTION_TYPE_OUTPUT);
+    in4->change_connection_type(
+        WIRE_CONNECTION_TYPE_OUTPUT, WIRE_CONNECTION_TYPE_OUTPUT, true);
+    in5->add_connection(WIRE_CONNECTION_TYPE_OUTPUT);
+    in5->change_connection_type(
+        WIRE_CONNECTION_TYPE_OUTPUT, WIRE_CONNECTION_TYPE_OUTPUT, true);
+    in6->add_connection(WIRE_CONNECTION_TYPE_OUTPUT);
+    in6->change_connection_type(
+        WIRE_CONNECTION_TYPE_OUTPUT, WIRE_CONNECTION_TYPE_OUTPUT, true);
+    in7->add_connection(WIRE_CONNECTION_TYPE_OUTPUT);
+    in7->change_connection_type(
+        WIRE_CONNECTION_TYPE_OUTPUT, WIRE_CONNECTION_TYPE_OUTPUT, true);
+    in8->add_connection(WIRE_CONNECTION_TYPE_OUTPUT);
+    in8->change_connection_type(
+        WIRE_CONNECTION_TYPE_OUTPUT, WIRE_CONNECTION_TYPE_OUTPUT, true);
+    write->add_connection(WIRE_CONNECTION_TYPE_OUTPUT);
+    write->change_connection_type(
+        WIRE_CONNECTION_TYPE_OUTPUT, WIRE_CONNECTION_TYPE_OUTPUT, true);
+    clock->add_connection(WIRE_CONNECTION_TYPE_OUTPUT);
+    propagate();
+    clock->change_connection_type(
+        WIRE_CONNECTION_TYPE_OUTPUT, WIRE_CONNECTION_TYPE_OUTPUT, true);
+    propagate();
+    clock->change_connection_type(
+        WIRE_CONNECTION_TYPE_OUTPUT, WIRE_CONNECTION_TYPE_OUTPUT, false);
+    propagate();
+    write->change_connection_type(
+        WIRE_CONNECTION_TYPE_OUTPUT, WIRE_CONNECTION_TYPE_OUTPUT, false);
+    propagate();
+
+    /* read all highs from the register. */
+    read->add_connection(WIRE_CONNECTION_TYPE_OUTPUT);
+    read->change_connection_type(
+        WIRE_CONNECTION_TYPE_OUTPUT, WIRE_CONNECTION_TYPE_OUTPUT, true);
+    propagate();
+    clock->change_connection_type(
+        WIRE_CONNECTION_TYPE_OUTPUT, WIRE_CONNECTION_TYPE_OUTPUT, true);
+    propagate();
+    assert(true == out1->get_signal());
+    assert(true == out2->get_signal());
+    assert(true == out3->get_signal());
+    assert(true == out4->get_signal());
+    assert(true == out5->get_signal());
+    assert(true == out6->get_signal());
+    assert(true == out7->get_signal());
+    assert(true == out8->get_signal());
+    clock->change_connection_type(
+        WIRE_CONNECTION_TYPE_OUTPUT, WIRE_CONNECTION_TYPE_OUTPUT, false);
+    propagate();
+    read->change_connection_type(
+        WIRE_CONNECTION_TYPE_OUTPUT, WIRE_CONNECTION_TYPE_OUTPUT, false);
+    propagate();
+
+    /* clear the register. */
+    clear->add_connection(WIRE_CONNECTION_TYPE_OUTPUT);
+    clear->change_connection_type(
+        WIRE_CONNECTION_TYPE_OUTPUT, WIRE_CONNECTION_TYPE_OUTPUT, true);
+    propagate();
+    clear->change_connection_type(
+        WIRE_CONNECTION_TYPE_OUTPUT, WIRE_CONNECTION_TYPE_OUTPUT, false);
+    propagate();
+    assert(false == out1->get_signal());
+    assert(false == out2->get_signal());
+    assert(false == out3->get_signal());
+    assert(false == out4->get_signal());
+    assert(false == out5->get_signal());
+    assert(false == out6->get_signal());
+    assert(false == out7->get_signal());
+    assert(false == out8->get_signal());
 }

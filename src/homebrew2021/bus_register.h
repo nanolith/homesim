@@ -12,6 +12,7 @@
 #include <homesim/ic/74173.h>
 #include <homesim/ic/74245.h>
 
+#include "basic_register.h"
 #include "data_bus.h"
 
 namespace homebrew2021
@@ -43,13 +44,12 @@ public:
     homesim::wire* get_data_wire(int offset);
 
 private:
-    std::shared_ptr<homesim::ic74173> reg[2];
+    std::shared_ptr<basic_register> reg;
     std::shared_ptr<homesim::ic74245> transceiver;
     std::shared_ptr<homesim::inverter> read_inv;
     std::shared_ptr<homesim::inverter> write_inv;
     std::shared_ptr<homesim::wire> read_wire;
     std::shared_ptr<homesim::wire> write_wire;
-    std::shared_ptr<homesim::wire> low_wire;
     std::shared_ptr<homesim::wire> high_wire;
     std::vector<std::shared_ptr<homesim::wire>> data_wires;
 };
